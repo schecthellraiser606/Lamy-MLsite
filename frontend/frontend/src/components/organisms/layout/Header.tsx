@@ -28,7 +28,14 @@ export const Header: VFC = memo(() => {
 
         <Flex align="center" fontSize="sm" display={{ base: "none", md: "flex" }}>
           <Link href="/thread/thread_index" passHref>
-            <Heading as="h3" fontSize="xl" fontFamily="Yuji Syuku" borderBottom="1px" marginRight={4} _hover={{ cursor: "pointer" }}>
+            <Heading
+              as="h3"
+              fontSize="xl"
+              fontFamily="Yuji Syuku"
+              borderBottom="1px"
+              marginRight={4}
+              _hover={{ cursor: "pointer" }}
+            >
               掲示板一覧
             </Heading>
           </Link>

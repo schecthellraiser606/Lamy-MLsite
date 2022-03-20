@@ -35,8 +35,8 @@ const MessageRight = styled.div`
   line-height: 34px;
   color: #19283c;
   text-align: left;
-  background: #CCFFFF;
-  border: 3px solid #02FFFF;
+  background: #ccffff;
+  border: 3px solid #02ffff;
   z-index: 0;
   border-radius: 10px;
   &:before {
@@ -49,7 +49,7 @@ const MessageRight = styled.div`
     height: 0px;
     border-style: solid;
     border-width: 9px 0 9px 9px;
-    border-color: transparent transparent transparent #CCFFFF;
+    border-color: transparent transparent transparent #ccffff;
     z-index: 0;
   }
   &:after {
@@ -62,7 +62,7 @@ const MessageRight = styled.div`
     height: 0px;
     border-style: solid;
     border-width: 10px 0 10px 10px;
-    border-color: transparent transparent transparent #02FFFF;
+    border-color: transparent transparent transparent #02ffff;
     z-index: -1;
   }
 `;
