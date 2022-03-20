@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  learn:  
+      build: ./DockerEnv 
+      volumes:
+        - ./code:/code  
+      ports:
+        # - "8080:8888"
+        - "8080:8888"

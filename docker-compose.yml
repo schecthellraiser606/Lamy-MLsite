@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  webapp:
+    build: ./backend
+    volumes:
+      - ./backend/webapp:/code/
+    stdin_open: true
+    tty: true
+    command: python manage.py runserver 0.0.0.0:8000
+    networks:
+      - backend_network
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: "3306"
+      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
+    depends_on:
+      - testdb
+      - redis
+  testdb:
+    build: ./db
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./mariadb_volume:/var/lib/mysql
+    networks:
+      - backend_network
+  redis:
+    image: redis:latest
+  celery:
+    build: ./backend
+    command: celery -A webapp worker -l info -Q Q1,Q2 --pool=eventlet -c 5
+    volumes:
+      - ./backend/webapp:/code/
+    networks:
+      - backend_network
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - testdb
+      - redis
+      - webapp
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/frontend:/home/app/frontend/
+    tty: true
+    ports:
+      - 3000:3000
+    networks:
+      - frontend_network
+
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge

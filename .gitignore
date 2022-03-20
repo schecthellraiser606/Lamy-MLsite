@@ -1,0 +1,9 @@
+#ENV
+.env
+.env.test
+
+#design
+/design
+
+#dbvolume
+/mariadb_volume
