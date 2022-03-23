@@ -1,3 +1,8 @@
+from __future__ import absolute_import, unicode_literals
+from celery import shared_task
+
+from .forms import PhotoForm
+
 from django.db import models
 
 import numpy as np
@@ -47,3 +52,24 @@ class Photo(models.Model):
         base64_img = base64.b64encode(img.read()).decode()
         
         return 'data:' + img.file.content_type + ';base64,' + base64_img
+
+@shared_task
+def predict(request):
+  if not request.method == 'POST':
+    return
+    redirect('carbike:index')
+    
+  form = PhotoForm (request.POST, request.FILES)
+  if not form.is_valid():
+    raise ValueError("Formが不正です")
+  
+  photo = Photo(image=form.cleaned_data['image'])
+  predicted, percentage = photo.predict()
+  
+  context = {
+    'photo_name': photo.image.name,
+    'photo_data': photo.image_src(),
+    'predicted':predicted,
+    'percentage':percentage
+  }
+  return context
