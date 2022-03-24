@@ -14,7 +14,7 @@ class Users(models.Model):
     
 class Images(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.OneToOneField(Users, to_field='uid', on_delete=models.PROTECT)
+  uid = models.OneToOneField(Users, on_delete=models.PROTECT)
   image_path = models.ImageField(upload_to='test_images')
   class_name = models.CharField(max_length=10)
   accurancy = models.FloatField()
@@ -26,7 +26,7 @@ class Images(models.Model):
     
 class Threads(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(Users, to_field='uid', on_delete=models.SET_DEFAULT, default='匿名', related_name='thread_user')
+  uid = models.ForeignKey(Users, on_delete=models.SET_DEFAULT, default='匿名', related_name='thread_user')
   title =  models.CharField(max_length=30)
   text = models.TextField(blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
@@ -37,8 +37,8 @@ class Threads(models.Model):
   
 class Comments(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(Users, to_field='uid', on_delete=models.SET_DEFAULT, default='匿名', related_name='comment_user')
-  threads = models.ForeignKey(Threads, to_field='id', on_delete=models.CASCADE)
+  uid = models.ForeignKey(Users, on_delete=models.SET_DEFAULT, default='匿名', related_name='comment_user')
+  threads = models.ForeignKey(Threads, on_delete=models.CASCADE)
   parent_id = models.PositiveIntegerField(blank=True, null=True)
   text = models.TextField(blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
