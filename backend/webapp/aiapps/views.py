@@ -13,12 +13,16 @@ class UserGetPostViewSet(viewsets.ModelViewSet):
   serializer_class = UserSerializer
   permission_classes = (ProfilePermission,)
   
-class ManageUserView(generics.RetrieveAPIView):
+class ManageUserView(generics.RetrieveUpdateAPIView):
   serializer_class = UserSerializer
   authentication_classes = (TokenAuthentication,)
   permission_classes = (IsAuthenticated,)
   
-class PhotoViewSet(viewsets.ModelViewSet):
+class PhotoGetViewSet(viewsets.ReadOnlyModelViewSet):
+  queryset = Images.objects.all()
+  serializer_class = PhotoSerializer
+
+class ManagePhotoViewSet(viewsets.ModelViewSet):
   queryset = Images.objects.all()
   serializer_class = PhotoSerializer
   authentication_classes = (TokenAuthentication,)
@@ -33,10 +37,6 @@ class ManageThreadView(viewsets.ModelViewSet):
   serializer_class = ThreadSerializer
   authentication_classes = (TokenAuthentication,)
   permission_classes = (IsAuthenticated,)
-  
-class CommentGetViewSet(viewsets.ReadOnlyModelViewSet):
-  queryset = Comments.objects.all()
-  serializer_class = CommentsSerializer
   
 class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.all()
