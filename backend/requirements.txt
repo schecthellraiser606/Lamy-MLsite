@@ -19,6 +19,7 @@ Deprecated==1.2.13
 Django==3.2.12
 django-celery-results==2.3.0
 django-cors-headers==3.11.0
+django-filter==21.1
 django-timezone-field==4.2.3
 djangorestframework==3.13.1
 dnspython==2.2.0
@@ -32,7 +33,7 @@ greenlet==1.1.2
 grpcio 
 h5py==3.1.0
 idna==3.3
-importlib-metadata
+importlib-metadata 
 Keras-Applications==1.0.8
 Keras-Preprocessing 
 kombu==5.2.3
@@ -71,6 +72,4 @@ vine==5.0.0
 wcwidth==0.2.5
 Werkzeug 
 wrapt==1.12.1
-zipp
-django_redis
-django-redis-cache 
+zipp 

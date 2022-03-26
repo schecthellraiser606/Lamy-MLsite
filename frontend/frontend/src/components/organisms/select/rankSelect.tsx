@@ -52,7 +52,7 @@ export const RankSelect: VFC<Props> = memo((prop) => {
     "博衣こより",
     "風間いろは",
   ];
-  const term = ["week", "month", "all time"];
+  const term = ["month", "all time"];
 
   const [holo, setHolo] = useState(wlists[0]);
   const [time, setTime] = useState(term[0]);

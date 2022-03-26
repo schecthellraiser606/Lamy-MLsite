@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from rest_framework import viewsets, generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, generics, filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .models import Comments, Threads, Users, Images
@@ -18,9 +18,14 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
   authentication_classes = (TokenAuthentication,)
   permission_classes = (IsAuthenticated,)
   
-class PhotoGetViewSet(viewsets.ReadOnlyModelViewSet):
+class PhotoGetViewSet(generics.ListAPIView):
   queryset = Images.objects.all()
   serializer_class = PhotoSerializer
+  filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+  filter_fields = ('class_name',)
+  search_fields = ('^updated_at')
+  ordering_fields = ('accurancy', 'updated_at')
+  ordering = ('accurancy', 'updated_at')
 
 class ManagePhotoViewSet(viewsets.ModelViewSet):
   queryset = Images.objects.all()
@@ -28,9 +33,12 @@ class ManagePhotoViewSet(viewsets.ModelViewSet):
   authentication_classes = (TokenAuthentication,)
   permission_classes = (IsAuthenticated,)
   
-class ThreadGetViewSet(viewsets.ReadOnlyModelViewSet):
+class ThreadGetViewSet(generics.ListAPIView):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer
+  filter_backends = (filters.OrderingFilter)
+  ordering_fields = ('updated_at')
+  ordering = ('updated_at')
   
 class ManageThreadView(viewsets.ModelViewSet):
   queryset = Threads.objects.all()
@@ -38,6 +46,14 @@ class ManageThreadView(viewsets.ModelViewSet):
   authentication_classes = (TokenAuthentication,)
   permission_classes = (IsAuthenticated,)
   
+class CommentGetView(generics.ListAPIView):
+  queryset = Comments.objects.order_by('updated_at')
+  serializer_class = CommentsSerializer
+  authentication_classes = (TokenAuthentication,)
+  permission_classes = (IsAuthenticated,)
+  filter_backends = (DjangoFilterBackend,)
+  filter_fields = ('threads',)
+
 class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.all()
   serializer_class = CommentsSerializer
