@@ -42,7 +42,7 @@ services:
 
   celery:
     build: ./backend
-    command: celery -A webapp worker -l info -Q Q1,Q2 --pool=eventlet -c 5
+    command: python manage.py celery -A webapp worker -l info -Q Q1,Q2 --pool=eventlet -c 5 --settings=settings
     volumes:
       - ./backend/webapp:/code/
     networks:

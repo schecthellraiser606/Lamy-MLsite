@@ -6,9 +6,7 @@ import os
 from celery import Celery
  
 # set the default Django settings module for the 'celery' program.
-settings = os.getenv(
-    "DJANGO_SETTINGS_MODULE", "webapp.settings")
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings') # 変更1 webapp.settingsに変更
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapp.settings') # 変更1 webapp.settingsに変更
  
 app = Celery('webapp') # 変更2 webappに変更
  

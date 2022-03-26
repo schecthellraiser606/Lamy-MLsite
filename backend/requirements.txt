@@ -34,6 +34,7 @@ grpcio
 h5py==3.1.0
 idna==3.3
 importlib-metadata 
+keras==2.6.*
 Keras-Applications==1.0.8
 Keras-Preprocessing 
 kombu==5.2.3
