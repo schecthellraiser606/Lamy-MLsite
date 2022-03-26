@@ -6,7 +6,9 @@ import os
 from celery import Celery
  
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapp.settings') # 変更1 webapp.settingsに変更
+settings = os.getenv(
+    "DJANGO_SETTINGS_MODULE", "webapp.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings') # 変更1 webapp.settingsに変更
  
 app = Celery('webapp') # 変更2 webappに変更
  
@@ -17,7 +19,7 @@ app = Celery('webapp') # 変更2 webappに変更
 app.config_from_object('django.conf:settings', namespace='CELERY')
  
 # Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
+app.autodiscover_tasks(['webapp'])
  
  
 @app.task(bind=True)

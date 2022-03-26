@@ -20,6 +20,7 @@ services:
     depends_on:
       - testdb
       - redis
+
   testdb:
     build: ./db
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -35,8 +36,10 @@ services:
       - ./mariadb_volume:/var/lib/mysql
     networks:
       - backend_network
+      
   redis:
     image: redis:latest
+
   celery:
     build: ./backend
     command: celery -A webapp worker -l info -Q Q1,Q2 --pool=eventlet -c 5
@@ -59,10 +62,8 @@ services:
     ports:
       - 3000:3000
     networks:
-      - frontend_network
+      - backend_network
 
 networks:
   backend_network:
-    driver: bridge
-  frontend_network:
     driver: bridge

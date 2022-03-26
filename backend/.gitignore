@@ -3,3 +3,6 @@
 
 #app
 /webapp/aiapps/migrations
+
+#ml_models
+/webapp/aiapps/ml_models

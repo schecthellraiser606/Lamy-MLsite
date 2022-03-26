@@ -139,6 +139,10 @@ CACHES = {
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = os.environ['DB_HOST'] 
+CELERY_TASK_TRACK_STARTED = True
+
+#CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+#CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
 
 
 # Internationalization

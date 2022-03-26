@@ -1,10 +1,17 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, generics, filters
+from rest_framework import viewsets, generics, filters, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from .task import ml_predict
 from .models import Comments, Threads, Users, Images
-from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer
+from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer, ImageLearningSerializer
 from .ownpermissions import ProfilePermission
+
+from .predict_model import PhotoLearning
+from django_celery_results.models import TaskResult
 
 # Create your views here.
 
@@ -59,3 +66,25 @@ class ManageCommentViewSet(viewsets.ModelViewSet):
   serializer_class = CommentsSerializer
   authentication_classes = (TokenAuthentication,)
   permission_classes = (IsAuthenticated,)
+
+@api_view(['POST'])  
+def predict(request):
+  if not request.method == 'POST':
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+  serializer = ImageLearningSerializer(request.POST, request.FILES)
+  if not serializer.is_valid():
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+  photo = PhotoLearning(image=request.FILES['file'])
+  task_id = ml_predict.delay(photo)
+  object = TaskResult.objects.filter(task_id=task_id)
+  
+  
+  context = {
+    'photo_name': photo.image.name,
+    'photo_data': photo.image_src(),
+    'predicted': object.result[0],
+    'percentage':object.result[1]
+  }
+  return Response(context)

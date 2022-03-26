@@ -40,7 +40,7 @@ class PhotoSerializer(serializers.ModelSerializer):
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   class Meta:
     model = Images
-    fields = ['id', 'user', 'uid', 'image_path', 'class_name', 'accurancy', 'created_at', 'updated_at']
+    fields = ['id', 'user', 'uid', 'image', 'class_name', 'accurancy', 'created_at', 'updated_at']
     
   def validate_class_name(self, value):
     if value not in hololist:
@@ -85,4 +85,7 @@ class CommentsSerializer(serializers.ModelSerializer):
     del validated_data['user']
     del validated_data['thread_form']
     return Comments.objects.create(**validated_data) 
+  
+class ImageLearningSerializer(serializers.Serializer):
+  image = serializers.ImageField(use_url=True)
       
