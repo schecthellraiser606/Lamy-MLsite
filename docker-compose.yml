@@ -67,6 +67,7 @@ services:
     build: ./frontend
     volumes:
       - ./frontend/frontend:/home/app/frontend/
+    command: npm run dev
     tty: true
     ports:
       - 3000:3000
