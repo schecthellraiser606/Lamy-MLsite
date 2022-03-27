@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .task import ml_predict
+from .tasks import ml_predict
 from .models import Comments, Threads, Users, Images
 from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer, ImageLearningSerializer
 from .ownpermissions import ProfilePermission
