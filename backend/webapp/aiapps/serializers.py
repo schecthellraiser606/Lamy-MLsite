@@ -1,4 +1,6 @@
 from rest_framework import serializers, validators
+
+from .predict_model import PhotoLearning
 from .models import Users, Images, Threads, Comments
 from rest_framework.authtoken.models import Token
 
@@ -87,5 +89,7 @@ class CommentsSerializer(serializers.ModelSerializer):
     return Comments.objects.create(**validated_data) 
   
 class ImageLearningSerializer(serializers.Serializer):
-  image = serializers.ImageField(use_url=True)
-      
+  image = serializers.ImageField()
+  
+  def create(self, validated_data):
+    return PhotoLearning(**validated_data)

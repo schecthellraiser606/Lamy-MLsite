@@ -70,7 +70,7 @@ class ManageCommentViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])  
 def predict(request):
   if not request.method == 'POST':
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
   serializer = ImageLearningSerializer(request.POST, request.FILES)
   if not serializer.is_valid():

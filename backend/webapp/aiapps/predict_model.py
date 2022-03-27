@@ -11,7 +11,7 @@ import io, base64
 graph = tf.compat.v1.get_default_graph()
 
 class PhotoLearning(models.Model):
-    image = models.ImageField(upload_to='test_images')
+    image = models.ImageField(upload_to='test_images/')
     
     IMAGE_SIZE = 224 #画像サイズの定数
     MODEL_FILE_PATH = './ml_models/vgg19_transfer.h5' #モデルファイル

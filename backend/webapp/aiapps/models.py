@@ -15,7 +15,7 @@ class Users(models.Model):
 class Images(models.Model):
   id = models.AutoField(primary_key=True)
   uid = models.OneToOneField(Users, on_delete=models.PROTECT)
-  image = models.ImageField(upload_to='test_images')
+  image = models.ImageField(upload_to='test_images/')
   class_name = models.CharField(max_length=10)
   accurancy = models.FloatField()
   created_at = models.DateTimeField(auto_now_add=True)
