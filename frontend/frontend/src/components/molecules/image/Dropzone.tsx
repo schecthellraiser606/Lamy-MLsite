@@ -6,31 +6,25 @@ import styled from "styled-components";
 import useIsomorphicLayoutEffect from "../../../hooks/canUseDom";
 import { PrimaryButton } from "../../atoms/buttons/PrimaryButton";
 
-type MyFile = File & {
-  preview: string;
-};
-
 // eslint-disable-next-line react/display-name
 export const DropZone: VFC = memo(() => {
   const url = "http://localhost:8000/aiapps/predict/";
   const acceptFile = "image/*";
   const maxFileSize = 1048576;
 
-  const [files, setFiles] = useState<MyFile>();
+  const [files, setFiles] = useState<File>();
+  const [name, setName] = useState("");
   const [isfile, setIsFile] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log("onDrop");
-    // previewの追加
-    const images = acceptedFiles.map((file) =>
-      Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      }),
-    );
 
-    const first = images.shift();
+    const images = acceptedFiles.map((file) => Object.assign(file));
+
+    const first = images.pop();
+    setName(URL.createObjectURL(first));
     setFiles(first);
   }, []);
 
@@ -51,8 +45,13 @@ export const DropZone: VFC = memo(() => {
 
   const onClick = () => {
     setUploading(true);
+    let form_data = new FormData();
+    if (files) {
+      form_data.append("image", files);
+    }
+
     axios
-      .post(url, files, {
+      .post(url, form_data, {
         headers: { "content-type": "multipart/form-data" },
       })
       .then((res) => {
@@ -72,7 +71,7 @@ export const DropZone: VFC = memo(() => {
       borderRadius="5px"
     >
       <SDiv {...getRootProps({ refKey: "innerRef" })}>
-        <input {...getInputProps()} />
+        <input {...getInputProps()} accept="image/png, image/jpeg"/>
         <Box backgroundColor="aqua" borderRadius="md" opacity="0.4" padding="40px">
           <Heading fontFamily="Yuji Syuku" color="black">
             画像アップ...
@@ -95,7 +94,7 @@ export const DropZone: VFC = memo(() => {
       </SDiv>
       <Flex flexDirection="row">
         <Spacer />
-        <PrimaryButton onClick={onClick} disable={isfile} loading={uploading} >
+        <PrimaryButton onClick={onClick} disable={isfile} loading={uploading}>
           AI判定じゃ！
         </PrimaryButton>
       </Flex>
@@ -104,5 +103,5 @@ export const DropZone: VFC = memo(() => {
 });
 
 const SDiv = styled.div`
- margin-bottom: 5px
+  margin-bottom: 5px;
 `;

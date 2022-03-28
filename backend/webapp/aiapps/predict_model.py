@@ -11,6 +11,7 @@ import io, base64
 graph = tf.compat.v1.get_default_graph()
 
 class PhotoLearning(models.Model):
+  
     image = models.ImageField(upload_to='test_images/')
     
     IMAGE_SIZE = 224 #画像サイズの定数

@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework import serializers, validators
 
 from .predict_model import PhotoLearning
@@ -88,8 +89,21 @@ class CommentsSerializer(serializers.ModelSerializer):
     del validated_data['thread_form']
     return Comments.objects.create(**validated_data) 
   
-class ImageLearningSerializer(serializers.Serializer):
-  image = serializers.ImageField()
   
+class ImageLearning(object):
+    def __init__(self, image):
+        self.image = image
+  
+class ImageLearningSerializer(serializers.ModelSerializer):
+  image = serializers.ImageField()
+  class Meta:
+    model = PhotoLearning
+    fields = ['image']    
+    
+    
   def create(self, validated_data):
-    return PhotoLearning(**validated_data)
+    return ImageLearning(**validated_data)
+  
+  def update(self, instance, validated_data):
+    instance.image = validated_data.get('image', instance.image)
+    return instance

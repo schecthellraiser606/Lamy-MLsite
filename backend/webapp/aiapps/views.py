@@ -72,11 +72,12 @@ def predict(request):
   if not request.method == 'POST':
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
-  serializer = ImageLearningSerializer(request.POST, request.FILES)
+  serializer = ImageLearningSerializer(data=request.data)
   if not serializer.is_valid():
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  concre = serializer.save()
   
-  photo = PhotoLearning(image=request.FILES['file'])
+  photo = PhotoLearning(image=concre.image)
   task_id = ml_predict.delay(photo)
   object = TaskResult.objects.filter(task_id=task_id)
   
