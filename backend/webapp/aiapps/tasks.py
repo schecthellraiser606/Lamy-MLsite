@@ -1,10 +1,16 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
-#from .predict_model import PhotoLearning
+from .predict_model import PhotoLearning
 
 # Create your models here.
 @shared_task
-def ml_predict(photo):
+def ml_predict(img):
+  photo = PhotoLearning(image=img)
   predicted, percentage = photo.predict()
-  return [predicted, percentage]
+  imgdata = photo.image_src()
+  return {
+      'photo_data':imgdata, 
+      'predicted':predicted, 
+      'percentage':percentage
+    }

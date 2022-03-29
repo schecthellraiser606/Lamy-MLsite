@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 
 from .tasks import ml_predict
 from .models import Comments, Threads, Users, Images
-from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer, ImageLearningSerializer
+from .serializers import CelerySerializer, CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer, ImageLearningSerializer
 from .ownpermissions import ProfilePermission
 
 from .predict_model import PhotoLearning
@@ -72,20 +72,22 @@ def predict(request):
   if not request.method == 'POST':
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
-  serializer = ImageLearningSerializer(data=request.data)
-  if not serializer.is_valid():
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-  concre = serializer.save()
+  serializer_in = ImageLearningSerializer(data=request.data)
+  if not serializer_in.is_valid():
+    return Response(serializer_in.errors, status=status.HTTP_400_BAD_REQUEST)
+  concre_in = serializer_in.save()
   
-  photo = PhotoLearning(image=concre.image)
-  task_id = ml_predict.delay(photo)
+  task_id = ml_predict.delay(concre_in.image)
   object = TaskResult.objects.filter(task_id=task_id)
   
-  
+  serializer_out = CelerySerializer(data=object.result)
+  if not serializer_out.is_valid():
+    return Response(serializer_out.errors, status=status.HTTP_400_BAD_REQUEST)
+  concre_out = serializer_out.save()
+
   context = {
-    'photo_name': photo.image.name,
-    'photo_data': photo.image_src(),
-    'predicted': object.result[0],
-    'percentage':object.result[1]
+    'photo_data': serializer_out.photo_data,
+    'predicted': serializer_out.predicted,
+    'percentage':serializer_out.percentage
   }
   return Response(context)
