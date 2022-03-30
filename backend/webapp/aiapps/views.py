@@ -1,16 +1,35 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, filters, status
+from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+import json
 
-from .models import Comments, Threads, Users, Images
+
+from .models import Comments, Threads, UserToken, Users, Images
 from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer
 from .ownpermissions import ProfilePermission
 
 # Create your views here.
 
+class Login(APIView):
+  def post(self, request, format=None):
+    try:
+      data = json.loads(request.body)
+      uid = data['uid']      
+    except:
+      return Response({'message': 'Post data injustice'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if not Users.objects.filter(uid=uid).exists():
+      return Response({'message': 'Login failure.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    user = Users.objects.get(uid=uid)
+    token = UserToken.create(user)
+    
+    return Response({'token': token.token})
+    
 class UserGetPostViewSet(viewsets.ModelViewSet):
   queryset = Users.objects.all()
   serializer_class = UserSerializer

@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.authtoken.views import obtain_auth_token
 
 from . import settings
 from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
@@ -23,7 +22,6 @@ from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('aiapps/', include('aiapps.urls')),
-    path('auth/', obtain_auth_token),
 ]
 
 
