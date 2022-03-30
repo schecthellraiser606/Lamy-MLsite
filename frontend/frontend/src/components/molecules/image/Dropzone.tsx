@@ -79,14 +79,14 @@ export const DropZone: VFC = memo(() => {
           <br />
           <Box borderWidth="2px" borderColor="blue.400" borderStyle="dotted" padding="20px">
             {isDragActive ? (
-              <Text fontSize="lg" color="black">
+              <Text fontFamily="Yuji Syuku" fontSize="lg" color="black">
                 Drop the files here ...
               </Text>
             ) : (
               <Text fontFamily="Yuji Syuku" fontSize="lg" color="black">
-                ここにお主が雪花ラミィだと証明できる画像を貼るのだ
+                ここにお主が雪花ラミィだと証明できる画像を貼るのだ。お主の画像として登録されるぞ。
                 <br />
-                Drag and Drop one file here, or click to select one file
+                Drag and Drop one file here, or click to select one file. And this will be registered as your image.
               </Text>
             )}
           </Box>

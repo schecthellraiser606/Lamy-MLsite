@@ -21,7 +21,6 @@ services:
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
     depends_on:
       - testdb
-      - redis
 
   testdb:
     build: ./db
@@ -39,31 +38,6 @@ services:
     networks:
       - backend_network
       
-  redis:
-    build: ./redis
-    ports:
-      - "6379:6379"
-    networks:
-      - backend_network
-
-  celery:
-    build: ./backend
-    command: celery -A webapp worker -l info -Q Q1,Q2 --pool=eventlet -c 5
-    volumes:
-      - ./backend/webapp:/code/
-    networks:
-      - backend_network
-    environment:
-      DB_NAME: ${DB_NAME}
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_PORT: "3306"
-      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
-    depends_on:
-      - testdb
-      - redis
-      - webapp
 
   frontend:
     build: ./frontend

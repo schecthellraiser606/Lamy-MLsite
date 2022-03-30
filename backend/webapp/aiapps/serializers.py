@@ -1,8 +1,9 @@
 from rest_framework import serializers, validators
 
-from .predict_model import PhotoLearning
 from .models import Users, Images, Threads, Comments
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
 
 hololist = [ 
     "雪花ラミィ",
@@ -30,14 +31,16 @@ class UserSerializer(serializers.ModelSerializer):
     return value
     
   def create(self, validated_data):
-    user = Users.objects.create_user(**validated_data)
+    user = Users.objects.create(**validated_data)
     Token.objects.create(user=user)
     return user
   
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   uid = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all(), write_only=True)
-  class_name = serializers.ChoiceField(hololist)
+  image = serializers.ImageField(use_url=True)
+  class_name = serializers.ChoiceField(hololist, allow_blank=True)
+  accurancy = serializers.IntegerField(max_value=100, min_value=0, allow_null=True)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   class Meta:
@@ -88,42 +91,5 @@ class CommentsSerializer(serializers.ModelSerializer):
     del validated_data['thread_form']
     return Comments.objects.create(**validated_data) 
   
+
   
-class ImageLearning(object):
-    def __init__(self, image):
-        self.image = image
-  
-class ImageLearningSerializer(serializers.Serializer):
-  image = serializers.ImageField()
-  class Meta:
-    fields = ['image']    
-    
-    
-  def create(self, validated_data):
-    return ImageLearning(**validated_data)
-  
-  def update(self, instance, validated_data):
-    instance.image = validated_data.get('image', instance.image)
-    return instance
-  
-class CeleryObject(object):
-    def __init__(self, photo_data, predicted, percentage ):
-        self.photo_data = photo_data
-        self.predicted  = predicted 
-        self.percentage = percentage
-class CelerySerializer(serializers.Serializer):
-  photo_data = serializers.CharField()
-  predicted = serializers.IntegerField()
-  percentage = serializers.IntegerField()
-  class Meta:
-    fields = ['image']    
-    
-    
-  def create(self, validated_data):
-    return CeleryObject(**validated_data)
-  
-  def update(self, instance, validated_data):
-    instance.photo_data= validated_data.get('photo_data', instance.photo_data)
-    instance.predicted= validated_data.get('predicted', instance.predicted)
-    instance.percentage= validated_data.get('percentage', instance.percentage)
-    return instance
