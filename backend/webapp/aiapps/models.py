@@ -1,7 +1,9 @@
 from os import access
 from django.utils import timezone
 from django.db import models
+
 import hashlib
+from datetime import timedelta
 
 import numpy as np
 import tensorflow as tf
@@ -40,7 +42,7 @@ class UserToken(models.Model):
   @staticmethod
   def create(user: Users):
      if UserToken.objects.filter(user=user).exists():
-       UserToken.objects.get(user=user).delete()
+       UserToken.objects.get(user=user).delete() #すでに存在した場合は削除
      dt = timezone.now()
      str = user.uid + user.worship + dt.strftime('%Y%m%d%H%M%S%f')
      hash = hashlib.sha256(str.encode('utf-8')).hexdigest()
@@ -49,6 +51,23 @@ class UserToken(models.Model):
             token = hash,
             access_datetime = dt)
      return token
+   
+  @staticmethod
+  def get(token_str: str):
+      # 引数のトークン文字列が存在するかチェック
+      if UserToken.objects.filter(token=token_str).exists():
+          return UserToken.objects.get(token=token_str)
+      else:
+          return None
+        
+  def check_valid_token(self):
+    delta = timedelta(minutes=40)
+    if(delta < timezone.now() - self.access_datetime):
+      return False
+    return True
+  
+  def update_access_datetime(self):
+    self.access_datetime = timezone.now()
     
 class Images(models.Model):
   id = models.AutoField(primary_key=True)

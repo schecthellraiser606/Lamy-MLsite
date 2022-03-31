@@ -1,13 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, filters, status
 from rest_framework.views import APIView
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import json
 
-
+from .myauthentication import MyAuthentication
 from .models import Comments, Threads, UserToken, Users, Images
 from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer
 from .ownpermissions import ProfilePermission
@@ -37,7 +36,7 @@ class UserGetPostViewSet(viewsets.ModelViewSet):
   
 class ManageUserView(generics.RetrieveUpdateAPIView):
   serializer_class = UserSerializer
-  authentication_classes = (TokenAuthentication,)
+  authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
   
 class PhotoGetViewSet(generics.ListAPIView):
@@ -52,7 +51,7 @@ class PhotoGetViewSet(generics.ListAPIView):
 class ManagePhotoViewSet(viewsets.ModelViewSet):
   queryset = Images.objects.all()
   serializer_class = PhotoSerializer
-  authentication_classes = (TokenAuthentication,)
+  authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
   
 class ThreadGetViewSet(generics.ListAPIView):
@@ -65,13 +64,13 @@ class ThreadGetViewSet(generics.ListAPIView):
 class ManageThreadView(viewsets.ModelViewSet):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer
-  authentication_classes = (TokenAuthentication,)
+  authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
   
 class CommentGetView(generics.ListAPIView):
   queryset = Comments.objects.order_by('updated_at')
   serializer_class = CommentsSerializer
-  authentication_classes = (TokenAuthentication,)
+  authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
   filter_backends = (DjangoFilterBackend,)
   filter_fields = ('threads',)
@@ -79,7 +78,7 @@ class CommentGetView(generics.ListAPIView):
 class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.all()
   serializer_class = CommentsSerializer
-  authentication_classes = (TokenAuthentication,)
+  authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
 
 @api_view(['POST'])  
