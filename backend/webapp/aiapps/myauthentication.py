@@ -2,7 +2,7 @@ from rest_framework import authentication
 from rest_framework import exceptions
 from rest_framework import status
 
-from backend.webapp.aiapps.models import UserToken
+from .models import UserToken
 
 class MyAuthentication(authentication.BaseAuthentication):
   def authenticate(self, request):

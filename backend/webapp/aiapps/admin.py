@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Comments, Images, Threads, Users
+from .models import Comments, Images, Threads, UserToken, Users
 
 # Register your models here.
 

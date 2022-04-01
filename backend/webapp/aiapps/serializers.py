@@ -1,8 +1,6 @@
 from rest_framework import serializers, validators
 
-from .models import Users, Images, Threads, Comments
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
+from .models import UserToken, Users, Images, Threads, Comments
 
 
 hololist = [ 
@@ -17,13 +15,14 @@ hololist = [
     "風間いろは",]
 class UserSerializer(serializers.ModelSerializer):
   uid = serializers.CharField(validators=[validators.UniqueValidator(queryset=Users.objects.all(), message="Not Unique")])
-  worsihp = serializers.ChoiceField(hololist)
+  displayname = serializers.CharField()
+  worship = serializers.ChoiceField(hololist)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   
   class Meta:
     model = Users
-    fields = ['uid', 'username', 'worship', 'created_at', 'updated_at']
+    fields = ['uid', 'displayname', 'worship', 'created_at', 'updated_at']
     
   def validate_worship(self, value):
     if value not in hololist:
@@ -32,8 +31,8 @@ class UserSerializer(serializers.ModelSerializer):
     
   def create(self, validated_data):
     user = Users.objects.create(**validated_data)
-    Token.objects.create(user=user)
-    return user
+    token = UserToken.create(user)
+    return {user, token}
   
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)

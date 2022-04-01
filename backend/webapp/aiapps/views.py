@@ -32,7 +32,7 @@ class Login(APIView):
 class UserGetPostViewSet(viewsets.ModelViewSet):
   queryset = Users.objects.all()
   serializer_class = UserSerializer
-  permission_classes = (ProfilePermission,)
+  # permission_classes = (ProfilePermission,)
   
 class ManageUserView(generics.RetrieveUpdateAPIView):
   serializer_class = UserSerializer

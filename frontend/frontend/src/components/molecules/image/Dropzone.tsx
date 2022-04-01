@@ -71,7 +71,7 @@ export const DropZone: VFC = memo(() => {
       borderRadius="5px"
     >
       <SDiv {...getRootProps({ refKey: "innerRef" })}>
-        <input {...getInputProps()} accept="image/png, image/jpeg"/>
+        <input {...getInputProps()} accept="image/png, image/jpeg" />
         <Box backgroundColor="aqua" borderRadius="md" opacity="0.4" padding="40px">
           <Heading fontFamily="Yuji Syuku" color="black">
             画像アップ...
@@ -84,9 +84,13 @@ export const DropZone: VFC = memo(() => {
               </Text>
             ) : (
               <Text fontFamily="Yuji Syuku" fontSize="lg" color="black">
-                ここにお主が雪花ラミィだと証明できる画像を貼るのだ。お主の画像として登録されるぞ。
+                ここにお主が雪花ラミィだと証明できる画像を貼るのだ。
                 <br />
-                Drag and Drop one file here, or click to select one file. And this will be registered as your image.
+                お主の画像として登録されるぞ。
+                <br />
+                Drag and Drop one file here, or click to select one file.
+                <br />
+                And this will be registered as your image.
               </Text>
             )}
           </Box>

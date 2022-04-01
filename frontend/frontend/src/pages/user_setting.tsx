@@ -2,6 +2,7 @@ import { Box, Flex, Heading, Radio, RadioGroup, Stack, Text } from "@chakra-ui/r
 import Image from "next/image";
 import { useState } from "react";
 import Snowfall from "react-snowfall";
+import { MyUserCreateButton } from "../components/molecules/login/myUserCreateButton";
 
 export function getImageSrc(filepath: string): string | undefined {
   if (process.env.NODE_ENV === "production") {
@@ -38,17 +39,20 @@ export default function UserSetting() {
       </Text>
       <br />
       <Flex align="center" justify="center" flexDirection="column">
-        <Box backgroundColor="gray.700" padding="1%">
-          <RadioGroup onChange={setValue} value={value}>
-            <Stack spacing={4} direction={{ base: "column", lg: "row" }}>
-              {wlists.map((list, index) => (
-                <Radio value={list} key={index}>
-                  {list}
-                </Radio>
-              ))}
-            </Stack>
-          </RadioGroup>
-        </Box>
+        <Stack>
+          <Box backgroundColor="gray.700" padding="3%">
+            <RadioGroup onChange={setValue} value={value}>
+              <Stack spacing={4} direction={{ base: "column", lg: "row" }}>
+                {wlists.map((list, index) => (
+                  <Radio value={list} key={index} fontSize={{ base: "sm", lg: "mid" }}>
+                    {list}
+                  </Radio>
+                ))}
+              </Stack>
+            </RadioGroup>
+          </Box>
+          <MyUserCreateButton value={value} />
+        </Stack>
         <Box maxHeight={1500}>
           {/* @ts-ignore */}
           <Image width={850} height={1200} src={getImageSrc(value)} alt="holoimage" />
