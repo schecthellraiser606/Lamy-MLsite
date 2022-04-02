@@ -1,20 +1,22 @@
-import { Box, Button, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { memo, useCallback, useState, VFC } from "react";
 import { useDropzone } from "react-dropzone";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import useIsomorphicLayoutEffect from "../../../hooks/canUseDom";
+import { myTokenState } from "../../../store/myUserState";
 import { userState } from "../../../store/userState";
 import { PrimaryButton } from "../../atoms/buttons/PrimaryButton";
 
 // eslint-disable-next-line react/display-name
 export const DropZone: VFC = memo(() => {
-  const url = "http://localhost:8000/aiapps/predict/";
+  const url = "http://localhost:8000/aiapps/image/";
   const acceptFile = "image/*";
   const maxFileSize = 1048576;
 
   const signInUser = useRecoilValue(userState);
+  const myToken = useRecoilValue(myTokenState);
 
   const [files, setFiles] = useState<File>();
   const [name, setName] = useState("");
@@ -49,13 +51,19 @@ export const DropZone: VFC = memo(() => {
   const onClick = () => {
     setUploading(true);
     let form_data = new FormData();
-    if (files) {
+    if (files && signInUser.id) {
       form_data.append("image", files);
+      form_data.append("uid", signInUser.id);
+      form_data.append("class_name", "");
+      form_data.append("accurancy", "");
     }
 
     axios
       .post(url, form_data, {
-        headers: { "content-type": "multipart/form-data" },
+        headers: { 
+          "Content-type": "multipart/form-data",
+          "Authorization": `${myToken.token}`,
+        },
       })
       .then((res) => {
         console.log(res.data);

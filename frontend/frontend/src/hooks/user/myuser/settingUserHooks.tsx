@@ -67,7 +67,7 @@ export const useSettingHook = () => {
         .put<myUserApi>(`http://localhost:8000/aiapps/update/`, data, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${myToken.token}`,
+            "Authorization": `${myToken.token}`,
           },
         })
         .then((res) => {
@@ -94,7 +94,7 @@ export const useSettingHook = () => {
         .put<myUserApi>(`http://localhost:8000/aiapps/update/`, data, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${myToken.token}`,
+            "Authorization": `${myToken.token}`,
           },
         })
         .then((res) => {

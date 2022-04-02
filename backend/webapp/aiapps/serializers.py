@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
   
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True,  many=False)
   image = serializers.ImageField(use_url=True)
   class_name = serializers.ChoiceField(hololist, allow_blank=True)
   accurancy = serializers.IntegerField(max_value=100, min_value=0, allow_null=True)
@@ -45,16 +45,12 @@ class PhotoSerializer(serializers.ModelSerializer):
   class Meta:
     model = Images
     fields = ['id', 'user', 'uid', 'image', 'class_name', 'accurancy', 'created_at', 'updated_at']
-    
-  def validate_class_name(self, value):
-    if value not in hololist:
-      raise serializers.ValidationError("worship error")
-    return value
-    
+        
   def create(self, validated_data):
-    del validated_data['user']
-    return Images.objects.create(**validated_data)
-  
+    learningImage =  Images.objects.create(**validated_data)
+    learningImage.predict()
+    return learningImage
+    
 class ThreadSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)

@@ -102,9 +102,8 @@ class Images(models.Model):
         
         result = model.predict([X])[0]
         predicted = result.argmax()
-        percent = int(result[predicted]*100)
-
-        return hololist[predicted], percent
+        self.class_name = hololist[predicted]
+        self.accurancy = int(result[predicted]*100)
       
   def image_src(self):
       with self.image.open() as img:

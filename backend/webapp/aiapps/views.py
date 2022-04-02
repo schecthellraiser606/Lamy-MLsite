@@ -86,28 +86,3 @@ class ManageCommentViewSet(viewsets.ModelViewSet):
   authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
 
-@api_view(['POST'])  
-def predict(request):
-  if not request.method == 'POST':
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-  serializer_in = PhotoSerializer(data=request.data)
-  if not serializer_in.is_valid():
-    return Response(serializer_in.errors, status=status.HTTP_400_BAD_REQUEST)
-  
-  print(serializer_in)
-  print(serializer_in.data)
-
-  
-  photo = Images(image=serializer_in.data)
-  predicted, percentage = photo.predict()
-  imgdata = photo.image_src()
-  
-
-  context = {
-    'photo_data': imgdata,
-    'predicted': predicted,
-    'percentage':percentage
-  }
-  
-  return Response(context)
