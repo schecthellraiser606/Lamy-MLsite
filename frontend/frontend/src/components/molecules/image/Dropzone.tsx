@@ -2,8 +2,10 @@ import { Box, Button, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { memo, useCallback, useState, VFC } from "react";
 import { useDropzone } from "react-dropzone";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import useIsomorphicLayoutEffect from "../../../hooks/canUseDom";
+import { userState } from "../../../store/userState";
 import { PrimaryButton } from "../../atoms/buttons/PrimaryButton";
 
 // eslint-disable-next-line react/display-name
@@ -12,11 +14,12 @@ export const DropZone: VFC = memo(() => {
   const acceptFile = "image/*";
   const maxFileSize = 1048576;
 
+  const signInUser = useRecoilValue(userState);
+
   const [files, setFiles] = useState<File>();
   const [name, setName] = useState("");
   const [isfile, setIsFile] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log("onDrop");
@@ -74,7 +77,7 @@ export const DropZone: VFC = memo(() => {
         <input {...getInputProps()} accept="image/png, image/jpeg" />
         <Box backgroundColor="aqua" borderRadius="md" opacity="0.4" padding="40px">
           <Heading fontFamily="Yuji Syuku" color="black">
-            画像アップ...
+            画像アップ...(ログイン要)
           </Heading>
           <br />
           <Box borderWidth="2px" borderColor="blue.400" borderStyle="dotted" padding="20px">
@@ -98,7 +101,7 @@ export const DropZone: VFC = memo(() => {
       </SDiv>
       <Flex flexDirection="row">
         <Spacer />
-        <PrimaryButton onClick={onClick} disable={isfile} loading={uploading}>
+        <PrimaryButton onClick={onClick} disable={isfile || !signInUser.isSignedIn} loading={uploading}>
           AI判定じゃ！
         </PrimaryButton>
       </Flex>
