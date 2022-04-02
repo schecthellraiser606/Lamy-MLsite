@@ -1,4 +1,5 @@
-from django.urls import path, include
+from django.urls import path 
+from django.conf.urls import include
 from rest_framework import routers
 from .views import CommentGetView, Login, ManageCommentViewSet, ManagePhotoViewSet, ManageThreadView, ManageUserView, PhotoGetViewSet, ThreadGetViewSet, UserGetPostViewSet, predict
 

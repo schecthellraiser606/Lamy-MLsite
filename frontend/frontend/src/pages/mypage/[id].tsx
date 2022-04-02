@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ChakraProvider,
   Divider,
   Flex,
   FormControl,
@@ -9,11 +10,12 @@ import {
   HStack,
   Input,
   InputRightElement,
+  Select,
   Spacer,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { ChangeEvent, useEffect, useLayoutEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useAuthHook } from "../../hooks/user/authhook";
 import { SecondaryButton } from "../../components/atoms/buttons/SecondaryButton";
@@ -23,6 +25,10 @@ import { useRouter } from "next/router";
 import { ProtectRoute } from "../../components/route/PrivateRoute";
 import useIsomorphicLayoutEffect from "../../hooks/canUseDom";
 import Snowfall from "react-snowfall";
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import { myTokenState, myWorshipState } from "../../store/myUserState";
+import { useSettingHook } from "../../hooks/user/myuser/settingUserHooks";
+import themeSelect from "../../styles/themeSelect";
 
 export function getImageSrc(filepath: string): string | undefined {
   if (process.env.NODE_ENV === "production") {
@@ -32,124 +38,171 @@ export function getImageSrc(filepath: string): string | undefined {
   }
 }
 
-const worshipApi = "沙花叉クロヱ";
 const accracy = 0.125;
 const className = "沙花叉クロヱ";
 
 // eslint-disable-next-line react/display-name
 export default function MyPage() {
+  const wlists = [
+    "雪花ラミィ",
+    "獅白ぼたん",
+    "桃鈴ねね",
+    "尾丸ポルカ",
+    "沙花叉クロヱ",
+    "ラプラスダークネス",
+    "鷹嶺ルイ",
+    "博衣こより",
+    "風間いろは",
+  ];
   const auth = getAuth();
   const signInUser = auth.currentUser;
+  const myWorship = useRecoilValue(myWorshipState);
+  const myTokenValue = useRecoilValue(myTokenState);
+
   const router = useRouter();
   const query = router.query;
 
   const { loading, userUpdateName, userUpdateEmail, userSignOut } = useAuthHook();
+  const { myLoading, userWorshipUpdate, userMyNameUpdate } = useSettingHook();
 
   const [name, setName] = useState(signInUser?.displayName ?? "");
   const [email, setEmail] = useState(signInUser?.email ?? "");
-  const [worship, setWorship] = useState(worshipApi);
+  const [worship, setWorship] = useState(myWorship.worship);
+  const resetMyUser = useResetRecoilState(myWorshipState);
+  const resetMyToken = useResetRecoilState(myTokenState);
 
   useIsomorphicLayoutEffect(() => {
     setName(signInUser?.displayName ?? "");
     setEmail(signInUser?.email ?? "");
-    setWorship(worshipApi);
-  }, [signInUser]);
+    setWorship(myWorship.worship);
+  }, [signInUser, myWorship]);
 
   const onChangeName = (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value);
   const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-  const onChangeWorship = (e: ChangeEvent<HTMLInputElement>) => setWorship(e.target.value);
+  const onChangeWorship = (e: ChangeEvent<HTMLSelectElement>) => setWorship(e.target.value);
 
-  const onClickUpdateName = () => userUpdateName(name);
+  const onClickUpdateName = () => {
+    userUpdateName(name);
+    userMyNameUpdate(signInUser?.uid, name);
+  };
   const onClickUpdateEmail = () => userUpdateEmail(email);
-  const onClickUpdateWorship = () => {};
-  const onClickLogout = () => userSignOut();
+  const onClickUpdateWorship = () => userWorshipUpdate(signInUser?.uid, worship);
+
+  const onClickLogout = () => {
+    resetMyUser();
+    resetMyToken();
+    userSignOut();
+  };
   const onClickTop = () => {
     router.push("/");
   };
 
   return (
     <ProtectRoute>
-      <Snowfall />
-      <Flex align="center" justify="center">
-        <Box bg="gray.700" padding={{ base: 3, md: 5 }} w={{ base: "sm", md: "3xl" }} m={{ base: 5, md: 20 }}>
-          {query.id === signInUser?.uid ? (
-            <>
-              <Heading fontSize={{ base: "lg", md: "2xl" }}>ユーザ情報</Heading>
-              <Divider my={{ base: 3, md: 7 }} />
+      <ChakraProvider theme={themeSelect}>
+        <Snowfall />
+        <Flex align="center" justify="center">
+          <Box bg="gray.400" padding={{ base: 3, md: 5 }} w={{ base: "sm", md: "3xl" }} m={{ base: 5, md: 20 }}>
+            {query.id === signInUser?.uid ? (
+              <>
+                <Heading fontSize={{ base: "lg", md: "2xl" }}>ユーザ情報</Heading>
+                <Divider my={{ base: 3, md: 7 }} color="black" />
 
-              <Flex align="center" justify="center" flexDirection="column">
-                <Image
-                  width={400}
-                  height={400}
-                  src={getImageSrc("../image/myimage/channels4_profile.png")}
-                  alt="Myimage"
-                />
-                <Stack py={{ base: 1, md: 2 }}>
-                  <Text>真の姿：{className}</Text>
-                  <Text>AI精度：{accracy}</Text>
+                <Flex align="center" justify="center" flexDirection="column">
+                  <Image
+                    width={400}
+                    height={400}
+                    src={getImageSrc("../image/myimage/channels4_profile.png")}
+                    alt="Myimage"
+                  />
+                  <Stack py={{ base: 1, md: 2 }}>
+                    <Text>真の姿：{className}</Text>
+                    <Text>AI精度：{accracy}</Text>
+                  </Stack>
+                </Flex>
+
+                <Divider my={{ base: 2, md: 6 }} color="black" />
+                <Stack textAlign="center">
+                  <FormControl>
+                    <FormLabel>ユーザ名</FormLabel>
+                    <Input
+                      value={name}
+                      onChange={onChangeName}
+                      isReadOnly={myTokenValue.token ? false : true}
+                      borderColor="black"
+                    />
+                    <InputRightElement>
+                      <Button size="xs" onClick={onClickUpdateName} isLoading={loading} color="black">
+                        変更
+                      </Button>
+                    </InputRightElement>
+                  </FormControl>
+
+                  <Spacer />
+
+                  <FormControl>
+                    <FormLabel>Email Address</FormLabel>
+                    <Input
+                      value={email}
+                      onChange={onChangeEmail}
+                      isReadOnly={myTokenValue.token ? false : true}
+                      borderColor="black"
+                    />
+                    <InputRightElement>
+                      <Button size="xs" onClick={onClickUpdateEmail} isLoading={loading} color="black">
+                        変更
+                      </Button>
+                    </InputRightElement>
+                  </FormControl>
+
+                  <Spacer />
+
+                  <FormControl>
+                    <FormLabel>推し</FormLabel>
+                    <Select
+                      value={worship}
+                      onChange={onChangeWorship}
+                      isReadOnly={myTokenValue.token ? false : true}
+                      borderColor="black"
+                    >
+                      {wlists.map((list, index) => (
+                        <option value={list} key={index}>
+                          {list}
+                        </option>
+                      ))}
+                    </Select>
+                    <InputRightElement>
+                      <Button size="xs" onClick={onClickUpdateWorship} isLoading={myLoading} color="black">
+                        変更
+                      </Button>
+                    </InputRightElement>
+                  </FormControl>
                 </Stack>
-              </Flex>
 
-              <Divider my={{ base: 2, md: 6 }} />
-              <Stack textAlign="center">
-                <FormControl>
-                  <FormLabel>ユーザ名</FormLabel>
-                  <Input value={name} onChange={onChangeName} isReadOnly={false} />
-                  <InputRightElement>
-                    <Button size="xs" onClick={onClickUpdateName} isLoading={loading} color="black">
-                      変更
-                    </Button>
-                  </InputRightElement>
-                </FormControl>
+                <Divider my={{ base: 2, md: 6 }} color="black" />
 
-                <Spacer />
-
-                <FormControl>
-                  <FormLabel>Email Address</FormLabel>
-                  <Input value={email} onChange={onChangeEmail} isReadOnly={false} />
-                  <InputRightElement>
-                    <Button size="xs" onClick={onClickUpdateEmail} isLoading={loading} color="black">
-                      変更
-                    </Button>
-                  </InputRightElement>
-                </FormControl>
-
-                <Spacer />
-
-                <FormControl>
-                  <FormLabel>推し</FormLabel>
-                  <Input value={worship} onChange={onChangeWorship} isReadOnly={false} />
-                  <InputRightElement>
-                    <Button size="xs" onClick={onClickUpdateWorship} isLoading={loading} color="black">
-                      変更
-                    </Button>
-                  </InputRightElement>
-                </FormControl>
-              </Stack>
-
-              <Divider my={{ base: 2, md: 6 }} />
-
-              <Box textAlign="right">
-                <SecondaryButton disable={false} loading={loading} onClick={onClickLogout}>
-                  ログアウト
-                </SecondaryButton>
-              </Box>
-            </>
-          ) : (
-            <>
-              <Heading fontSize={{ base: "xl", md: "3xl" }}>
-                ユーザ情報にてエラーがあります。
-                <br />
-                トップページへお戻りください。
-              </Heading>
-              <Divider my={{ base: 3, md: 7 }} />
-              <Button rightIcon={<ArrowForwardIcon />} colorScheme="cyan" variant="outline" onClick={onClickTop}>
-                トップページへ
-              </Button>
-            </>
-          )}
-        </Box>
-      </Flex>
+                <Box textAlign="right">
+                  <SecondaryButton disable={false} loading={loading} onClick={onClickLogout}>
+                    ログアウト
+                  </SecondaryButton>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Heading fontSize={{ base: "xl", md: "3xl" }}>
+                  ユーザ情報にてエラーがあります。
+                  <br />
+                  トップページへお戻りください。
+                </Heading>
+                <Divider my={{ base: 3, md: 7 }} color="black" />
+                <Button rightIcon={<ArrowForwardIcon />} colorScheme="cyan" variant="outline" onClick={onClickTop}>
+                  トップページへ
+                </Button>
+              </>
+            )}
+          </Box>
+        </Flex>
+      </ChakraProvider>
     </ProtectRoute>
   );
 }

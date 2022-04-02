@@ -8,6 +8,7 @@ import { userState } from "../../store/userState";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "../../api/firebase/firebase"; // Initialize FirebaseApp
 import useIsomorphicLayoutEffect from "../../hooks/canUseDom";
+import { useSettingHook } from "../../hooks/user/myuser/settingUserHooks";
 // import { useAccessControll } from "../../hooks/user/accessControlHook";
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
 export const Templete: VFC<Props> = memo((props) => {
   const setUser = useSetRecoilState(userState);
   const resetStatus = useResetRecoilState(userState);
+  const { userGet } = useSettingHook();
 
   useIsomorphicLayoutEffect(() => {
     const unsubscribed = onAuthStateChanged(getAuth(), (user) => {
@@ -28,6 +30,7 @@ export const Templete: VFC<Props> = memo((props) => {
           id: user.uid,
           name: user.displayName || undefined,
         });
+        userGet(user.uid);
       } else {
         resetStatus();
       }

@@ -1,4 +1,4 @@
-export type userCreateApi = {
+export type myUserApi = {
   created_at: string;
   displayname: string;
   uid: string;

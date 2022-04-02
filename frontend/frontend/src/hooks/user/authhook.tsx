@@ -32,7 +32,7 @@ export const useAuthHook = () => {
         updateProfile(authuser.currentUser, {
           displayName: name,
         })
-          .then(() => showMessage({ title: "変更完了", status: "info" }))
+          .then()
           .catch((error) => showMessage({ title: "変更できませんでした", status: "error" }))
           .finally(() => {
             setLoading(false);

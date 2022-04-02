@@ -15,7 +15,7 @@ type Props = {
 export const MyUserCreateButton: VFC<Props> = memo((props) => {
   const { value } = props;
   const router = useRouter();
-  const { userTokenPost, userCreate, loading } = useSettingHook();
+  const { userTokenPost, userCreate, userGet, myLoading } = useSettingHook();
   const signInUser = useRecoilValue(userState);
   const myWorship = useRecoilValue(myWorshipState);
 
@@ -23,19 +23,20 @@ export const MyUserCreateButton: VFC<Props> = memo((props) => {
     try {
       if (signInUser.id && signInUser.name && !myWorship.worship) {
         userCreate(signInUser.id, signInUser.name, value);
+        userGet(signInUser.id);
       }
       if (signInUser.id) {
         userTokenPost(signInUser.id);
       }
     } finally {
-      // router.push("/login")
+      router.push("/");
     }
   };
 
   return (
     <Flex flexDirection="row">
       <Spacer />
-      <PrimaryButton disable={!signInUser.id} loading={loading} onClick={onClick}>
+      <PrimaryButton disable={!signInUser.id} loading={myLoading} onClick={onClick}>
         登録
       </PrimaryButton>
     </Flex>

@@ -156,3 +156,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'test_images')
 MEDIA_URL = '/test_images/'
+AUTH_USER_MODEL = 'aiapps.User'

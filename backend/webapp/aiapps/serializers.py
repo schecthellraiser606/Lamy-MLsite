@@ -1,6 +1,6 @@
 from rest_framework import serializers, validators
 
-from .models import UserToken, Users, Images, Threads, Comments
+from .models import UserToken, User, Images, Threads, Comments
 
 
 hololist = [ 
@@ -15,14 +15,14 @@ hololist = [
     "風間いろは",]
 
 class UserSerializer(serializers.ModelSerializer):
-  uid = serializers.CharField(validators=[validators.UniqueValidator(queryset=Users.objects.all(), message="Not Unique")])
+  uid = serializers.CharField(validators=[validators.UniqueValidator(queryset=User.objects.all(), message="Not Unique")])
   displayname = serializers.CharField(max_length=30)
   worship = serializers.ChoiceField(hololist)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   
   class Meta:
-    model = Users
+    model = User
     fields = ['uid', 'displayname', 'worship', 'created_at', 'updated_at']
     
   def validate_worship(self, value):
@@ -31,12 +31,12 @@ class UserSerializer(serializers.ModelSerializer):
     return value
     
   def create(self, validated_data):
-    user = Users.objects.create(**validated_data)
+    user = User.objects.create(**validated_data)
     return user
   
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all(), write_only=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
   image = serializers.ImageField(use_url=True)
   class_name = serializers.ChoiceField(hololist, allow_blank=True)
   accurancy = serializers.IntegerField(max_value=100, min_value=0, allow_null=True)
@@ -57,7 +57,7 @@ class PhotoSerializer(serializers.ModelSerializer):
   
 class ThreadSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all(), write_only=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   class Meta:
@@ -75,7 +75,7 @@ class ThreadSerializer(serializers.ModelSerializer):
   
 class CommentsSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all(), write_only=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
   thread_form = ThreadSerializer(read_only=True)
   threads = serializers.PrimaryKeyRelatedField(queryset=Threads.objects.all(), write_only=True)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)

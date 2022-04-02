@@ -1,12 +1,11 @@
 from rest_framework import authentication
 from rest_framework import exceptions
-from rest_framework import status
 
 from .models import UserToken
 
 class MyAuthentication(authentication.BaseAuthentication):
   def authenticate(self, request):
-      token_str = request.META.get('HTTP_X_AUTH_TOKEN')
+      token_str = request.META.get('HTTP_AUTHORIZATION', '')
       if not token_str:
         raise exceptions.AuthenticationFailed({'message': 'token injustice.'})
       

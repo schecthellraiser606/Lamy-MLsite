@@ -2,13 +2,13 @@ from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, filters, status
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 import json
 
 from .myauthentication import MyAuthentication
-from .models import Comments, Threads, UserToken, Users, Images
+from .models import Comments, Threads, UserToken, User, Images
 from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer
 from .ownpermissions import ProfilePermission
 
@@ -22,23 +22,27 @@ class Login(APIView):
     except:
       return Response({'message': 'Post data injustice'}, status=status.HTTP_400_BAD_REQUEST)
     
-    if not Users.objects.filter(uid=uid).exists():
+    if not User.objects.filter(uid=uid).exists():
       return Response({'message': 'Login failure.'}, status=status.HTTP_403_FORBIDDEN)
     
-    user = Users.objects.get(uid=uid)
+    user = User.objects.get(uid=uid)
     token = UserToken.create(user)
     
     return JsonResponse({'token': token.token})
     
 class UserGetPostViewSet(viewsets.ModelViewSet):
-  queryset = Users.objects.all()
+  queryset = User.objects.all()
   serializer_class = UserSerializer
   permission_classes = (ProfilePermission,)
   
 class ManageUserView(generics.RetrieveUpdateAPIView):
+  
   serializer_class = UserSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated,)
+  permission_classes = (IsAuthenticated ,)
+  
+  def get_object(self):
+      return self.request.user
   
 class PhotoGetViewSet(generics.ListAPIView):
   queryset = Images.objects.all()

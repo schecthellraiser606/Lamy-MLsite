@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 import hashlib
 from datetime import timedelta
@@ -18,8 +19,9 @@ hololist = ["雪花ラミィ", "獅白ぼたん", "桃鈴ねね", "尾丸ポル�
 
 # Create your models here.
 
-class Users(models.Model):
+class User(AbstractUser):
   uid = models.CharField(max_length=50, primary_key=True)
+  password = models.CharField(max_length=20, default="741852369")
   displayname = models.CharField(max_length=30, default='匿名')
   worship = models.CharField(max_length=10, default="その他")
   created_at = models.DateTimeField(auto_now_add=True)
@@ -29,7 +31,7 @@ class Users(models.Model):
       return self.displayname
     
 class UserToken(models.Model):
-  user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name = 'token_user')
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'token_user')
   token =models.CharField(max_length=64)
   access_datetime = models.DateTimeField()
   
@@ -39,7 +41,7 @@ class UserToken(models.Model):
         return self.user.displayname + '(' + dt + ') - ' + self.token
       
   @staticmethod
-  def create(user: Users):
+  def create(user: User):
      if UserToken.objects.filter(user=user).exists():
        UserToken.objects.get(user=user).delete() #すでに存在した場合は削除
      dt = timezone.now()
@@ -70,7 +72,7 @@ class UserToken(models.Model):
     
 class Images(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.OneToOneField(Users, on_delete=models.CASCADE)
+  uid = models.OneToOneField(User, on_delete=models.CASCADE)
   image = models.ImageField(upload_to='test_images/')
   class_name = models.CharField(max_length=10, blank=True)
   accurancy = models.PositiveIntegerField(blank=True, null=True)
@@ -112,7 +114,7 @@ class Images(models.Model):
     
 class Threads(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(Users, on_delete=models.SET_DEFAULT, default='匿名', related_name='thread_user')
+  uid = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='thread_user')
   title =  models.CharField(max_length=30)
   text = models.TextField(blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
@@ -123,7 +125,7 @@ class Threads(models.Model):
   
 class Comments(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(Users, on_delete=models.SET_DEFAULT, default='匿名', related_name='comment_user')
+  uid = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='comment_user')
   threads = models.ForeignKey(Threads, on_delete=models.CASCADE)
   parent_id = models.PositiveIntegerField(blank=True, null=True)
   text = models.TextField(blank=True)
