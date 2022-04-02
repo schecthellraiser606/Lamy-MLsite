@@ -5,7 +5,10 @@ export type AuthState = {
   name: string | undefined;
 };
 
-export type MyUserType = {
+export type MyWorhip = {
   worship: string;
+};
+
+export type MyToken = {
   token: string;
 };

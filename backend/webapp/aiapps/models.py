@@ -29,7 +29,7 @@ class Users(models.Model):
       return self.displayname
     
 class UserToken(models.Model):
-  user = models.OneToOneField(Users, on_delete=models.CASCADE)
+  user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name = 'token_user')
   token =models.CharField(max_length=64)
   access_datetime = models.DateTimeField()
   

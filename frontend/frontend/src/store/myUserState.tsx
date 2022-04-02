@@ -1,7 +1,12 @@
 import { atom } from "recoil";
-import { MyUserType } from "../types/userType";
+import { MyWorhip, MyToken } from "../types/userType";
 
-export const myUserState = atom<MyUserType>({
-  key: "myUserState",
-  default: { worship: "", token: "" },
+export const myWorshipState = atom<MyWorhip>({
+  key: "myWorShip",
+  default: { worship: "" },
+});
+
+export const myToken = atom<MyToken>({
+  key: "myToken",
+  default: { token: "" },
 });

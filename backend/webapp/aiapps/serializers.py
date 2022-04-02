@@ -13,9 +13,10 @@ hololist = [
     "鷹嶺ルイ",
     "博衣こより",
     "風間いろは",]
+
 class UserSerializer(serializers.ModelSerializer):
   uid = serializers.CharField(validators=[validators.UniqueValidator(queryset=Users.objects.all(), message="Not Unique")])
-  displayname = serializers.CharField()
+  displayname = serializers.CharField(max_length=30)
   worship = serializers.ChoiceField(hololist)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
@@ -31,8 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
     
   def create(self, validated_data):
     user = Users.objects.create(**validated_data)
-    token = UserToken.create(user)
-    return {user, token}
+    return user
   
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
