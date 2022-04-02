@@ -37,7 +37,7 @@ export const MyUserCreateButton: VFC<Props> = memo((props) => {
     <Flex flexDirection="row">
       <Spacer />
       <PrimaryButton disable={!signInUser.id} loading={myLoading} onClick={onClick}>
-        登録
+        ログイン
       </PrimaryButton>
     </Flex>
   );

@@ -33,7 +33,7 @@ export default function UserSetting() {
         推しは誰？
       </Heading>
       <Text marginX="50px" as="h3" fontSize={{ base: "md", md: "xl" }}>
-        ※まだ登録は済んでません
+        ※まだログインは済んでません
         <br />
         (5，6期生しか実装できておらぬ...)
       </Text>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { myWorshipState, myTokenState } from "../../../store/myUserState";
@@ -9,6 +10,7 @@ import { useMessage } from "../../useMessage";
 export const useSettingHook = () => {
   const { showMessage } = useMessage();
   const [myLoading, setmyLoading] = useState(false);
+  const router = useRouter();
 
   const [myWorship, setMyWorship] = useRecoilState(myWorshipState);
   const [myToken, setMyToken] = useRecoilState(myTokenState);
@@ -74,13 +76,14 @@ export const useSettingHook = () => {
           showMessage({ title: "推しを更新しました。", status: "success" });
         })
         .catch((e) => {
-          showMessage({ title: "推しの更新に失敗しました。", status: "error" });
+          showMessage({ title: "推しの更新に失敗しました。再度ログインして下さい。", status: "error" });
+          router.push("/user_setting");
         })
         .finally(() => {
           setmyLoading(false);
         });
     },
-    [myToken.token, showMessage, setMyWorship, signInUser.name],
+    [myToken.token, showMessage, setMyWorship, signInUser.name, router],
   );
 
   const userMyNameUpdate = useCallback(
@@ -98,13 +101,14 @@ export const useSettingHook = () => {
           showMessage({ title: "名前の更新をしました。", status: "success" });
         })
         .catch((e) => {
-          showMessage({ title: "名前の更新に失敗しました。", status: "error" });
+          showMessage({ title: "名前の更新に失敗しました。再度ログインして下さい。", status: "error" });
+          router.push("/user_setting");
         })
         .finally(() => {
           setmyLoading(false);
         });
     },
-    [showMessage, setmyLoading, myToken.token, myWorship],
+    [showMessage, setmyLoading, myToken.token, myWorship, router],
   );
 
   const userTokenPost = useCallback(

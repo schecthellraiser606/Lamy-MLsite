@@ -132,7 +132,7 @@ export default function MyPage() {
                       borderColor="black"
                     />
                     <InputRightElement>
-                      <Button size="xs" onClick={onClickUpdateName} isLoading={loading} color="black">
+                      <Button size="xs" onClick={onClickUpdateName} isLoading={loading || myLoading} color="black">
                         変更
                       </Button>
                     </InputRightElement>
@@ -149,7 +149,7 @@ export default function MyPage() {
                       borderColor="black"
                     />
                     <InputRightElement>
-                      <Button size="xs" onClick={onClickUpdateEmail} isLoading={loading} color="black">
+                      <Button size="xs" onClick={onClickUpdateEmail} isLoading={loading || myLoading} color="black">
                         変更
                       </Button>
                     </InputRightElement>
@@ -172,7 +172,7 @@ export default function MyPage() {
                       ))}
                     </Select>
                     <InputRightElement>
-                      <Button size="xs" onClick={onClickUpdateWorship} isLoading={myLoading} color="black">
+                      <Button size="xs" onClick={onClickUpdateWorship} isLoading={loading || myLoading} color="black">
                         変更
                       </Button>
                     </InputRightElement>
