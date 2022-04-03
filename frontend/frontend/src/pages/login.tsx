@@ -6,7 +6,7 @@ import Snowfall from "react-snowfall";
 // eslint-disable-next-line react/display-name
 export default function Login() {
   return (
-    <PublicRoute>
+    <>
       <Snowfall />
       <Flex align="center" justify="center" height="100vh">
         <Stack>
@@ -18,6 +18,6 @@ export default function Login() {
           </Box>
         </Stack>
       </Flex>
-    </PublicRoute>
+    </>
   );
 }

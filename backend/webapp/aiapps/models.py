@@ -72,8 +72,9 @@ class UserToken(models.Model):
     
 class Images(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.OneToOneField(User, on_delete=models.CASCADE)
+  uid = models.ForeignKey(User, on_delete=models.CASCADE)
   image = models.ImageField(upload_to='test_images/')
+  is_main = models.BooleanField(default=False)
   class_name = models.CharField(max_length=10, blank=True)
   accurancy = models.PositiveIntegerField(blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)

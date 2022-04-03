@@ -33,24 +33,26 @@ class UserSerializer(serializers.ModelSerializer):
   def create(self, validated_data):
     user = User.objects.create(**validated_data)
     return user
-  
+
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True,  many=False)
   image = serializers.ImageField(use_url=True)
+  is_main = serializers.BooleanField(default=False)
   class_name = serializers.ChoiceField(hololist, allow_blank=True)
   accurancy = serializers.IntegerField(max_value=100, min_value=0, allow_null=True)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   class Meta:
     model = Images
-    fields = ['id', 'user', 'uid', 'image', 'class_name', 'accurancy', 'created_at', 'updated_at']
-        
+    fields = ['id', 'user', 'uid', 'image', 'is_main', 'class_name', 'accurancy', 'created_at', 'updated_at']
+
   def create(self, validated_data):
     learningImage =  Images.objects.create(**validated_data)
     learningImage.predict()
     return learningImage
-    
+  
+  
 class ThreadSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)

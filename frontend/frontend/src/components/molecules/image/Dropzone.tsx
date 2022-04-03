@@ -1,12 +1,16 @@
 import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { memo, useCallback, useState, VFC } from "react";
 import { useDropzone } from "react-dropzone";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import useIsomorphicLayoutEffect from "../../../hooks/canUseDom";
+import { useMessage } from "../../../hooks/useMessage";
+import { myImageState } from "../../../store/myImageState";
 import { myTokenState } from "../../../store/myUserState";
 import { userState } from "../../../store/userState";
+import { LearningImagee } from "../../../types/responseType";
 import { PrimaryButton } from "../../atoms/buttons/PrimaryButton";
 
 // eslint-disable-next-line react/display-name
@@ -14,9 +18,11 @@ export const DropZone: VFC = memo(() => {
   const url = "http://localhost:8000/aiapps/image/";
   const acceptFile = "image/*";
   const maxFileSize = 1048576;
+  const router = useRouter();
 
   const signInUser = useRecoilValue(userState);
   const myToken = useRecoilValue(myTokenState);
+  const setLearningImage = useSetRecoilState(myImageState);
 
   const [files, setFiles] = useState<File>();
   const [name, setName] = useState("");
@@ -48,27 +54,34 @@ export const DropZone: VFC = memo(() => {
     }
   }, [files]);
 
+  const { showMessage } = useMessage();
+
   const onClick = () => {
     setUploading(true);
     let form_data = new FormData();
     if (files && signInUser.id) {
       form_data.append("image", files);
       form_data.append("uid", signInUser.id);
+      form_data.append("is_main", "False");
       form_data.append("class_name", "");
       form_data.append("accurancy", "");
     }
 
     axios
-      .post(url, form_data, {
-        headers: { 
+      .post<LearningImagee>(url, form_data, {
+        headers: {
           "Content-type": "multipart/form-data",
-          "Authorization": `${myToken.token}`,
+          Authorization: `${myToken.token}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
+        setLearningImage(res.data);
+        router.push("/result");
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        showMessage({ title: "AI判定に失敗しました。再度ログインして下さい。", status: "error" });
+        router.push("/user_setting");
+      })
       .finally(() => setUploading(false));
   };
 
