@@ -42,3 +42,4 @@ yarn-error.log*
 
 #image
 /src/image
+/src/pages/result

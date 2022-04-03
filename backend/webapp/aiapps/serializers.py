@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True,  many=False)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True,  many=True)
   image = serializers.ImageField(use_url=True)
   is_main = serializers.BooleanField(default=False)
   class_name = serializers.ChoiceField(hololist, allow_blank=True)

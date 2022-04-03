@@ -75,7 +75,16 @@ export const DropZone: VFC = memo(() => {
         },
       })
       .then((res) => {
-        setLearningImage(res.data);
+        const data = res.data;
+        setLearningImage({
+          accurancy: data.accurancy,
+          class_name: data.class_name,
+          created_at: data.created_at,
+          id: data.id,
+          image: data.image,
+          is_main: data.is_main,
+          updated_at: data.updated_at,
+        });
         router.push("/result");
       })
       .catch((err) => {

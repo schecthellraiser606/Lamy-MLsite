@@ -1,3 +1,3 @@
-FROM mariadb:10.7
+FROM mariadb:latest
 
 COPY ./init.sql /docker-entrypoint-initdb.d

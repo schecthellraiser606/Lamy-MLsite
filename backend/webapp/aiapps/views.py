@@ -59,6 +59,20 @@ class ManagePhotoViewSet(viewsets.ModelViewSet):
   authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
   
+  def dispatch(self, request, *args, **kwargs):
+    try:
+      data = json.loads(request.body)
+      uid = data['uid']      
+    except:
+      raise PermissionError('Post data injustice')
+    
+    obj = self.get_object()
+    if obj.uid != uid:
+        raise PermissionError('permisson faile')
+      
+    return super(ManagePhotoViewSet, self).dispatch(request, *args, **kwargs)
+  
+  
 class ThreadGetViewSet(generics.ListAPIView):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer

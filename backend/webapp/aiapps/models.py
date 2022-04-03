@@ -20,12 +20,15 @@ hololist = ["雪花ラミィ", "獅白ぼたん", "桃鈴ねね", "尾丸ポル�
 # Create your models here.
 
 class User(AbstractUser):
-  uid = models.CharField(max_length=50, primary_key=True)
+  uid = models.CharField(max_length=50, primary_key=True, unique=True)
   password = models.CharField(max_length=20, default="741852369")
   displayname = models.CharField(max_length=30, default='匿名')
+  username = models.CharField(max_length=10, blank=True, unique=False)
   worship = models.CharField(max_length=10, default="その他")
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+  
+  USERNAME_FIELD = 'uid'
   
   def __str__(self) :
       return self.displayname

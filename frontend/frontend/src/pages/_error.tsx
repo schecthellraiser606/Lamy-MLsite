@@ -1,6 +1,5 @@
 import React from "react";
 import { NextPage, NextPageContext } from "next";
-import { Templete } from "../components/templetes/templete";
 import { Box, Divider, Flex, Heading, Image } from "@chakra-ui/react";
 interface Props {
   statusCode: number;

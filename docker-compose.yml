@@ -1,6 +1,7 @@
 version: "3.7"
 
 services:
+
   webapp:
     build: ./backend
     volumes:
@@ -11,7 +12,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - backend_network
+      - backendNetwork
     environment:
       DB_NAME: ${DB_NAME}
       DB_HOST: ${DB_HOST}
@@ -36,7 +37,7 @@ services:
     volumes:
       - ./mariadb_volume:/var/lib/mysql
     networks:
-      - backend_network
+      - backendNetwork
       
 
   frontend:
@@ -48,8 +49,8 @@ services:
     ports:
       - 3000:3000
     networks:
-      - backend_network
+      - backendNetwork
 
 networks:
-  backend_network:
+  backendNetwork:
     driver: bridge
