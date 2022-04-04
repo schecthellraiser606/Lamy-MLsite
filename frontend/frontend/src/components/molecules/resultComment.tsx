@@ -1,10 +1,8 @@
 import { Box, Divider, Flex, Heading, Image, Spacer, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
-import { memo, useState, VFC } from "react";
+import { memo, VFC } from "react";
 import { useRecoilValue } from "recoil";
-import useIsomorphicLayoutEffect from "../../hooks/canUseDom";
+import { useImageHook } from "../../hooks/image/imageHook";
 import { myImageState } from "../../store/myImageState";
-import { myTokenState } from "../../store/myUserState";
 import { userState } from "../../store/userState";
 import { PrimaryButton } from "../atoms/buttons/PrimaryButton";
 
@@ -65,36 +63,12 @@ export function getmyImageValue(filepath: string): string | undefined {
 }
 // eslint-disable-next-line react/display-name
 export const ResultComment: VFC = memo(() => {
-  const [loading, setLoading] = useState(false);
+  const {imageLoading, profileImageSet} = useImageHook();
 
   const myImageValue = useRecoilValue(myImageState);
   const signInUser = useRecoilValue(userState);
-  const myToken = useRecoilValue(myTokenState);
 
-  const onClick = () => {
-    setLoading(true);
-    const url = `http://localhost:8000/aiapps/image/${myImageValue.id}/`;
-    const data = {
-      uid: signInUser.id,
-      is_main: true,
-      class_name: myImageValue.class_name,
-      accurancy: myImageValue.accurancy,
-    };
-    axios
-      .patch(url, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${myToken.token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setLoading(false));
-  };
+  const onClick = () => profileImageSet();
 
   return (
     <Box bg="gray.700" padding={{ base: 3, md: 5 }} w={{ base: "xs", md: "3xl" }}>
@@ -120,7 +94,7 @@ export const ResultComment: VFC = memo(() => {
 
       <Flex flexDirection="row">
         <Spacer />
-        <PrimaryButton onClick={onClick} loading={loading} disable={!signInUser.isSignedIn}>
+        <PrimaryButton onClick={onClick} loading={imageLoading} disable={!signInUser.isSignedIn}>
           プロフィール画像に設定する
         </PrimaryButton>
       </Flex>

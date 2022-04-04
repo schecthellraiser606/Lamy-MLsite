@@ -10,7 +10,7 @@ import json
 from .myauthentication import MyAuthentication
 from .models import Comments, Threads, UserToken, User, Images
 from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer
-from .ownpermissions import ProfilePermission
+from .ownpermissions import OwnObjectPermission, ProfilePermission
 
 # Create your views here.
 
@@ -57,20 +57,8 @@ class ManagePhotoViewSet(viewsets.ModelViewSet):
   queryset = Images.objects.all()
   serializer_class = PhotoSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated,)
+  permission_classes = (IsAuthenticated, OwnObjectPermission)
   
-  def dispatch(self, request, *args, **kwargs):
-    try:
-      data = json.loads(request.body)
-      uid = data['uid']      
-    except:
-      raise PermissionError('Post data injustice')
-    
-    obj = self.get_object()
-    if obj.uid != uid:
-        raise PermissionError('permisson faile')
-      
-    return super(ManagePhotoViewSet, self).dispatch(request, *args, **kwargs)
   
   
 class ThreadGetViewSet(generics.ListAPIView):
@@ -84,19 +72,19 @@ class ManageThreadView(viewsets.ModelViewSet):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated,)
+  permission_classes = (IsAuthenticated, OwnObjectPermission)
   
 class CommentGetView(generics.ListAPIView):
   queryset = Comments.objects.order_by('updated_at')
   serializer_class = CommentsSerializer
   authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated,)
-  filter_backends = (DjangoFilterBackend,)
+  filter_backends = (DjangoFilterBackend, OwnObjectPermission)
   filter_fields = ('threads',)
 
 class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.all()
   serializer_class = CommentsSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated,)
+  permission_classes = (IsAuthenticated, OwnObjectPermission)
 

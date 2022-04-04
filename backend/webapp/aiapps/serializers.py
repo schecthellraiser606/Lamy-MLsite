@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PhotoSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True,  many=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True,  many=False)
   image = serializers.ImageField(use_url=True)
   is_main = serializers.BooleanField(default=False)
   class_name = serializers.ChoiceField(hololist, allow_blank=True)
@@ -55,7 +55,7 @@ class PhotoSerializer(serializers.ModelSerializer):
   
 class ThreadSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True, many=False)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   class Meta:
@@ -73,9 +73,9 @@ class ThreadSerializer(serializers.ModelSerializer):
   
 class CommentsSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+  uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True, many=False)
   thread_form = ThreadSerializer(read_only=True)
-  threads = serializers.PrimaryKeyRelatedField(queryset=Threads.objects.all(), write_only=True)
+  threads = serializers.PrimaryKeyRelatedField(queryset=Threads.objects.all(), write_only=True, many=False)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   
