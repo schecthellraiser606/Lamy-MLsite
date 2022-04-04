@@ -5,8 +5,6 @@ import axios from "axios";
 import { User } from "../test/user";
 import Snowfall from "react-snowfall";
 
-const class_name = "沙花叉クロヱ";
-
 export interface Props {
   users: Array<User>;
 }

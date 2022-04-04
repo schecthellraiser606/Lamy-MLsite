@@ -45,16 +45,16 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
       return self.request.user
   
 class PhotoGetViewSet(generics.ListAPIView):
-  queryset = Images.objects.all()
+  queryset = Images.objects.select_related('uid').all()
   serializer_class = PhotoSerializer
   filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-  filter_fields = ('class_name',)
+  filter_fields = ('class_name', 'is_main')
   search_fields = ('^updated_at')
   ordering_fields = ('accurancy', 'updated_at')
   ordering = ('accurancy', 'updated_at')
 
 class ManagePhotoViewSet(viewsets.ModelViewSet):
-  queryset = Images.objects.all()
+  queryset = Images.objects.select_related('uid').all()
   serializer_class = PhotoSerializer
   authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated, OwnObjectPermission)
