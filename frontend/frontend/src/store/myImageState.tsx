@@ -18,7 +18,6 @@ export const myImageState = atom<LearningImagee>({
     is_main: false,
     updated_at: "",
     user:{
-      uid: "",
       displayname: "",
       worship: "雪花ラミィ",
       created_user_at: "",
