@@ -63,8 +63,6 @@ export const DropZone: VFC = memo(() => {
       form_data.append("image", files);
       form_data.append("uid", signInUser.id);
       form_data.append("is_main", "False");
-      form_data.append("class_name", "");
-      form_data.append("accurancy", "");
     }
 
     axios
@@ -84,6 +82,12 @@ export const DropZone: VFC = memo(() => {
           image: data.image,
           is_main: data.is_main,
           updated_at: data.updated_at,
+          user:{
+            displayname: data.user.displayname,
+            worship: data.user.worship,
+            created_user_at: data.user.created_user_at,
+            updated_user_at: data.user.updated_user_at
+          }
         });
         router.push("/result");
       })

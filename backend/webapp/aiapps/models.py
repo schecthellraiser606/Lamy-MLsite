@@ -25,8 +25,8 @@ class User(AbstractUser):
   displayname = models.CharField(max_length=30, default='匿名')
   username = models.CharField(max_length=10, blank=True, unique=False)
   worship = models.CharField(max_length=10, default="その他")
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
+  created_user_at = models.DateTimeField(auto_now_add=True)
+  updated_user_at = models.DateTimeField(auto_now=True)
   
   USERNAME_FIELD = 'uid'
   
@@ -34,7 +34,7 @@ class User(AbstractUser):
       return self.displayname
     
 class UserToken(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'token_user')
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'user_token')
   token =models.CharField(max_length=64)
   access_datetime = models.DateTimeField()
   
@@ -75,13 +75,13 @@ class UserToken(models.Model):
     
 class Images(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(User, to_field="uid", on_delete=models.CASCADE, related_name = 'image_user')
+  user = models.ForeignKey(User, to_field="uid", on_delete=models.CASCADE, related_name = 'user_image')
   image = models.ImageField(upload_to='test_images/')
   is_main = models.BooleanField(default=False)
   class_name = models.CharField(max_length=10, blank=True)
   accurancy = models.PositiveIntegerField(blank=True, null=True)
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
+  created_image_at = models.DateTimeField(auto_now_add=True)
+  updated_image_at = models.DateTimeField(auto_now=True)
   
   def __str__(self) :
       return self.id
@@ -117,23 +117,23 @@ class Images(models.Model):
     
 class Threads(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='thread_user')
+  user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='user_thread')
   title =  models.CharField(max_length=30)
   text = models.TextField(blank=True)
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
+  created_thread_at = models.DateTimeField(auto_now_add=True)
+  updated_thread_at = models.DateTimeField(auto_now=True)
   
   def __str__(self) :
       return self.title
   
 class Comments(models.Model):
   id = models.AutoField(primary_key=True)
-  uid = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='comment_user')
-  threads = models.ForeignKey(Threads, on_delete=models.CASCADE)
+  user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='user_comment')
+  threads = models.ForeignKey(Threads, on_delete=models.CASCADE, related_name='comment_thread')
   parent_id = models.PositiveIntegerField(blank=True, null=True)
   text = models.TextField(blank=True)
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
+  created_comment_at = models.DateTimeField(auto_now_add=True)
+  updated_comment_at = models.DateTimeField(auto_now=True)
   
   def __str__(self) :
       return self.id

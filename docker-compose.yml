@@ -1,7 +1,6 @@
 version: "3.7"
 
 services:
-
   webapp:
     build: ./backend
     volumes:
@@ -50,6 +49,8 @@ services:
       - 3000:3000
     networks:
       - backendNetwork
+    depends_on:
+      - testdb
 
 networks:
   backendNetwork:

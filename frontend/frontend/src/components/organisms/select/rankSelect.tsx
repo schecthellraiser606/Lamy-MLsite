@@ -1,8 +1,8 @@
 import { ChangeEvent, memo, useState, VFC } from "react";
 import { Box, Flex, Text, Divider, Select, ChakraProvider, Spacer, Stack } from "@chakra-ui/react";
 import themeSelect from "../../../styles/themeSelect";
-import { User } from "../../../test/user";
 import Image from "next/image";
+import { LearningImagee } from "../../../types/responseType";
 
 export function getImageSrc(filepath: string): string | undefined {
   if (process.env.NODE_ENV === "production") {
@@ -15,7 +15,7 @@ export function getImageSrc(filepath: string): string | undefined {
 const accracy = 0.125;
 
 type Props = {
-  users: Array<User>;
+  imageList: Array<LearningImagee>;
 };
 
 function rankColor(rank: number) {
@@ -39,7 +39,7 @@ function rankColor(rank: number) {
 
 // eslint-disable-next-line react/display-name
 export const RankSelect: VFC<Props> = memo((prop) => {
-  const { users } = prop;
+  const { imageList } = prop;
 
   const wlists = [
     "雪花ラミィ",
@@ -94,7 +94,7 @@ export const RankSelect: VFC<Props> = memo((prop) => {
           </Stack>
         </Flex>
         <Divider margin={2} />
-        {users.map((user, index) => (
+        {imageList.map((image, index) => (
           <Flex flexDirection="row" align="center" key={index}>
             <Box p={1} marginRight={5}>
               {/* @ts-ignore */}

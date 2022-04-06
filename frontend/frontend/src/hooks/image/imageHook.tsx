@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { myImageState } from "../../store/myImageState";
 import { myTokenState } from "../../store/myUserState";
 import { LearningImagee } from "../../types/responseType";
@@ -11,7 +11,7 @@ export const useImageHook =() =>{
   const { showMessage } = useMessage();
   const [imageLoading, setImageLoading] = useState(false);
   const router = useRouter();
-  const myImageValue = useRecoilValue(myImageState);
+  const [myImageValue, setLearningImage]= useRecoilState(myImageState);
   const myToken = useRecoilValue(myTokenState);
   
   const profileImageSet = useCallback(()=>{
@@ -19,8 +19,6 @@ export const useImageHook =() =>{
     const url = `http://localhost:8000/aiapps/image/${myImageValue.id}/`;
     const data = {
       is_main: true,
-      class_name: myImageValue.class_name,
-      accurancy: myImageValue.accurancy,
     };
     axios
       .patch<LearningImagee>(url, data, {
@@ -30,6 +28,22 @@ export const useImageHook =() =>{
         },
       })
       .then((res) => {
+        const data = res.data;
+        setLearningImage({
+          accurancy: data.accurancy,
+          class_name: data.class_name,
+          created_at: data.created_at,
+          id: data.id,
+          image: data.image,
+          is_main: data.is_main,
+          updated_at: data.updated_at,
+          user:{
+            displayname: data.user.displayname,
+            worship: data.user.worship,
+            created_user_at: data.user.created_user_at,
+            updated_user_at: data.user.updated_user_at
+          }
+        });
         showMessage({ title: "プロフィール画像に設定しました。", status: "success" });
       })
       .catch((err) => {
@@ -37,7 +51,7 @@ export const useImageHook =() =>{
         router.push("/user_setting");
       })
       .finally(() => setImageLoading(false));
-  }, [myToken, showMessage, myImageValue, router])
+  }, [myToken, showMessage, myImageValue, router, setLearningImage])
 
   return{profileImageSet, imageLoading }
 }

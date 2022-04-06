@@ -9,5 +9,11 @@ class ProfilePermission(permissions.BasePermission):
     
 class OwnObjectPermission(permissions.BasePermission):
   def has_object_permission(self, request, view, obj):
-    return obj.uid == request.user
+    return obj == request.user
+  
+class NoDeletePermission(permissions.BasePermission):
+  def has_object_permission(self, request, view, obj):
+      if request.method != 'DELETE':
+        return True
+      return False
     

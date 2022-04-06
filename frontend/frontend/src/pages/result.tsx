@@ -2,14 +2,14 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { ResultComment } from "../components/molecules/resultComment";
 import { RankSelect } from "../components/organisms/select/rankSelect";
 import axios from "axios";
-import { User } from "../test/user";
 import Snowfall from "react-snowfall";
+import { LearningImagee } from "../types/responseType";
 
 export interface Props {
-  users: Array<User>;
+  imageList: Array<LearningImagee>;
 }
 
-export default function ResultHome({ users }: Props) {
+export default function ResultHome({ imageList }: Props) {
   return (
     <Flex align="center" justify="center" flexDirection="column">
       <Snowfall />
@@ -17,18 +17,19 @@ export default function ResultHome({ users }: Props) {
         あなたの真の姿は...
       </Heading>
       <ResultComment />
-      <RankSelect users={users} />
+      <RankSelect imageList={imageList} />
     </Flex>
   );
 }
 
 export async function getStaticProps() {
-  const res = await axios.get<Array<User>>("https://jsonplaceholder.typicode.com/users");
-  const users = res.data;
+  const url = "http://localhost:8000/aiapps/image_rank/?is_main=false&ordering=-accurancy";
+  const res = await axios.get<LearningImagee>(url);
+  const imageList = res.data;
 
   return {
     props: {
-      users,
+      imageList,
     },
   };
 }

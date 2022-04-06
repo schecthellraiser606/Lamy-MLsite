@@ -1,7 +1,6 @@
 export type myUserApi = {
   created_at: string;
   displayname: string;
-  uid: string;
   updated_at: string;
   worship: string;
 };
@@ -18,4 +17,10 @@ export type LearningImagee = {
   image: string;
   is_main: boolean;
   updated_at: string;
+  user:{
+    displayname: string,
+    worship: string,
+    created_user_at: string,
+    updated_user_at: string
+  },
 };

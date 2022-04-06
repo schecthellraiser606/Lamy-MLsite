@@ -25,6 +25,7 @@
     "react-firebaseui": "^6.0.0",
     "react-snowfall": "^1.1.2",
     "recoil": "^0.6.1",
+    "recoil-persist": "^4.1.0",
     "styled-components": "^5.3.3"
   },
   "devDependencies": {

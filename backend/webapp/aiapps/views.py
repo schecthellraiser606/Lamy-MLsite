@@ -10,7 +10,7 @@ import json
 from .myauthentication import MyAuthentication
 from .models import Comments, Threads, UserToken, User, Images
 from .serializers import CommentsSerializer, PhotoSerializer, ThreadSerializer, UserSerializer
-from .ownpermissions import OwnObjectPermission, ProfilePermission
+from .ownpermissions import NoDeletePermission, OwnObjectPermission, ProfilePermission
 
 # Create your views here.
 
@@ -39,25 +39,26 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
   
   serializer_class = UserSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated ,)
+  permission_classes = (IsAuthenticated , NoDeletePermission)
   
   def get_object(self):
       return self.request.user
   
-class PhotoGetViewSet(generics.ListAPIView):
-  queryset = Images.objects.select_related('uid').all()
+class ImageRnakGetViewSet(generics.ListAPIView):
+  queryset = Images.objects.select_related('user').order_by('-accurancy').distinct()
   serializer_class = PhotoSerializer
   filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
   filter_fields = ('class_name', 'is_main')
-  search_fields = ('^updated_at')
-  ordering_fields = ('accurancy', 'updated_at')
-  ordering = ('accurancy', 'updated_at')
+  search_fields = ('^updated_image_at')
+  ordering_fields = ('accurancy', 'updated_image_at')
+  ordering = ('accurancy', 'updated_image_at')
+
 
 class ManagePhotoViewSet(viewsets.ModelViewSet):
-  queryset = Images.objects.select_related('uid').all()
+  queryset = Images.objects.select_related('user').all()
   serializer_class = PhotoSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated, OwnObjectPermission)
+  permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission)
   
   
   
@@ -65,21 +66,21 @@ class ThreadGetViewSet(generics.ListAPIView):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer
   filter_backends = (filters.OrderingFilter)
-  ordering_fields = ('updated_at')
-  ordering = ('updated_at')
+  ordering_fields = ('updated_thread_at')
+  ordering = ('updated_thread_at')
   
 class ManageThreadView(viewsets.ModelViewSet):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated, OwnObjectPermission)
+  permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
   
 class CommentGetView(generics.ListAPIView):
-  queryset = Comments.objects.order_by('updated_at')
+  queryset = Comments.objects.order_by('-updated_comment_at')
   serializer_class = CommentsSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated,)
-  filter_backends = (DjangoFilterBackend, OwnObjectPermission)
+  permission_classes = (IsAuthenticated, OwnObjectPermission)
+  filter_backends = (DjangoFilterBackend, )
   filter_fields = ('threads',)
 
 class ManageCommentViewSet(viewsets.ModelViewSet):
