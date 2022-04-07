@@ -3,7 +3,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, filters, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 import json
 
@@ -45,13 +44,11 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
       return self.request.user
   
 class ImageRnakGetViewSet(generics.ListAPIView):
-  queryset = Images.objects.select_related('user').order_by('-accurancy').distinct()
+  queryset = Images.objects.select_related('user').filter(is_main=True).order_by('-accurancy', '-updated_image_at').all()
   serializer_class = PhotoSerializer
-  filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-  filter_fields = ('class_name', 'is_main')
-  search_fields = ('^updated_image_at')
-  ordering_fields = ('accurancy', 'updated_image_at')
-  ordering = ('accurancy', 'updated_image_at')
+  filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+  filter_fields = ('class_name',)
+  search_fields = ('^updated_image_at',)
 
 
 class ManagePhotoViewSet(viewsets.ModelViewSet):
@@ -59,6 +56,14 @@ class ManagePhotoViewSet(viewsets.ModelViewSet):
   serializer_class = PhotoSerializer
   authentication_classes = (MyAuthentication,)
   permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission)
+  
+  def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        if Images.objects.filter(user=request.user, is_main=True).exists():
+          old = Images.objects.get(user=request.user, is_main=True)
+          old.is_main = False
+          old.save()
+        return self.update(request, *args, **kwargs)
   
   
   
@@ -68,6 +73,7 @@ class ThreadGetViewSet(generics.ListAPIView):
   filter_backends = (filters.OrderingFilter)
   ordering_fields = ('updated_thread_at')
   ordering = ('updated_thread_at')
+  
   
 class ManageThreadView(viewsets.ModelViewSet):
   queryset = Threads.objects.all()

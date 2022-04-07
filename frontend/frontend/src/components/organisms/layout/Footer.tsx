@@ -16,17 +16,20 @@ export const Footer: VFC = memo(() => {
       >
         <Stack>
           <Box>
-            <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
               <GridItem w="100%" textAlign="center">
                 <Link href="/">トップ</Link>
               </GridItem>
               <GridItem w="100%" textAlign="center">
                 <Link href="/thread/thread_index">掲示板</Link>
               </GridItem>
+              <GridItem w="100%" textAlign="center">
+                <Link href="/ranking">ランキング</Link>
+              </GridItem>
             </Grid>
           </Box>
 
-          <Text fontSize="md" justifyContent="center">
+          <Text fontSize="md" justifyContent="center" textAlign="center">
             &copy; 暇人ギター日記. 2022.03
           </Text>
         </Stack>

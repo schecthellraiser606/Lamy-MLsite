@@ -21,7 +21,7 @@ export const MyUserCreateButton: VFC<Props> = memo((props) => {
 
   const onClick = () => {
     try {
-      if ((signInUser.id) && (signInUser.name) && !(myWorship.worship)) {
+      if (signInUser.id && signInUser.name && !myWorship.worship) {
         userCreate(signInUser.id, signInUser.name, value);
         userGet(signInUser.id);
       }
@@ -36,7 +36,7 @@ export const MyUserCreateButton: VFC<Props> = memo((props) => {
   return (
     <Flex flexDirection="row">
       <Spacer />
-      <PrimaryButton disable={!(signInUser.isSignedIn)} loading={myLoading} onClick={onClick}>
+      <PrimaryButton disable={!signInUser.isSignedIn} loading={myLoading} onClick={onClick}>
         ログイン
       </PrimaryButton>
     </Flex>

@@ -6,7 +6,7 @@ import { ScrollTop } from "../atoms/buttons/ScrollTop";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { userState } from "../../store/userState";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import "../../api/firebase/firebase"; 
+import "../../api/firebase/firebase";
 import useIsomorphicLayoutEffect from "../../hooks/canUseDom";
 
 type Props = {

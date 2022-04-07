@@ -1,7 +1,7 @@
 from asyncore import read
 from rest_framework import serializers, validators
 
-from .models import UserToken, User, Images, Threads, Comments
+from .models import User, Images, Threads, Comments
 
 
 hololist = [ 

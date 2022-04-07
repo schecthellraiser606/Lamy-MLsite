@@ -101,8 +101,8 @@ export const RankSelect: VFC<Props> = memo((prop) => {
               <Image width={60} height={60} src={getImageSrc("channels4_profile")} alt="rank" />
             </Box>
             <Stack>
-              <Text>{user.username}</Text>
-              <Text>AI精度：{accracy}</Text>
+              <Text>{image.user.displayname}</Text>
+              <Text>AI精度：{image.accurancy}</Text>
             </Stack>
             <Spacer />
             <Text fontSize={{ base: 30, md: 40 }} color={rankColor(index)} fontFamily="Yuji Syuku">

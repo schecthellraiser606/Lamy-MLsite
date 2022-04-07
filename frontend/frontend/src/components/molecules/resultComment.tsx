@@ -1,4 +1,6 @@
-import { Box, Divider, Flex, Heading, Image, Spacer, Stack, Text } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Box, Button, Divider, Flex, Heading, Image, Spacer, Stack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { memo, VFC } from "react";
 import { useRecoilValue } from "recoil";
 import { useImageHook } from "../../hooks/image/imageHook";
@@ -63,12 +65,17 @@ export function getmyImageValue(filepath: string): string | undefined {
 }
 // eslint-disable-next-line react/display-name
 export const ResultComment: VFC = memo(() => {
-  const {imageLoading, profileImageSet} = useImageHook();
+  const { imageLoading, profileImageSet } = useImageHook();
 
   const myImageValue = useRecoilValue(myImageState);
   const signInUser = useRecoilValue(userState);
 
   const onClick = () => profileImageSet();
+
+  const router = useRouter();
+  const onClickRank = () => {
+    router.push("/ranking");
+  };
 
   return (
     <Box bg="gray.700" padding={{ base: 3, md: 5 }} w={{ base: "xs", md: "3xl" }}>
@@ -97,6 +104,13 @@ export const ResultComment: VFC = memo(() => {
         <PrimaryButton onClick={onClick} loading={imageLoading} disable={!signInUser.isSignedIn}>
           プロフィール画像に設定する
         </PrimaryButton>
+      </Flex>
+      <Divider p={3}/>
+      <Flex flexDirection="row">
+        <Spacer />
+        <Button rightIcon={<ArrowForwardIcon />} colorScheme="cyan" variant="outline" onClick={onClickRank} marginTop={5}>
+        ランキングページへ
+      </Button>
       </Flex>
     </Box>
   );

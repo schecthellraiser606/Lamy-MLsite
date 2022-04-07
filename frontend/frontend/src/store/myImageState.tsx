@@ -3,8 +3,8 @@ import { recoilPersist } from "recoil-persist";
 import { LearningImagee } from "../types/responseType";
 
 const { persistAtom } = recoilPersist({
-	key: "recoil-persist",
-	storage: typeof window === "undefined" ? undefined : sessionStorage
+  key: "recoil-persist",
+  storage: typeof window === "undefined" ? undefined : sessionStorage,
 });
 
 export const myImageState = atom<LearningImagee>({
@@ -17,11 +17,11 @@ export const myImageState = atom<LearningImagee>({
     image: "",
     is_main: false,
     updated_at: "",
-    user:{
+    user: {
       displayname: "",
       worship: "雪花ラミィ",
       created_user_at: "",
-      updated_user_at: ""
+      updated_user_at: "",
     },
   },
   effects_UNSTABLE: [persistAtom],

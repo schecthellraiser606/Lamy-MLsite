@@ -3,8 +3,8 @@ import { recoilPersist } from "recoil-persist";
 import { MyWorhip, MyToken } from "../types/userType";
 
 const { persistAtom } = recoilPersist({
-	key: "recoil-persist",
-	storage: typeof window === "undefined" ? undefined : sessionStorage
+  key: "recoil-persist",
+  storage: typeof window === "undefined" ? undefined : sessionStorage,
 });
 
 export const myWorshipState = atom<MyWorhip>({

@@ -7,14 +7,14 @@ import { myTokenState } from "../../store/myUserState";
 import { LearningImagee } from "../../types/responseType";
 import { useMessage } from "../useMessage";
 
-export const useImageHook =() =>{
+export const useImageHook = () => {
   const { showMessage } = useMessage();
   const [imageLoading, setImageLoading] = useState(false);
   const router = useRouter();
-  const [myImageValue, setLearningImage]= useRecoilState(myImageState);
+  const [myImageValue, setLearningImage] = useRecoilState(myImageState);
   const myToken = useRecoilValue(myTokenState);
-  
-  const profileImageSet = useCallback(()=>{
+
+  const profileImageSet = useCallback(() => {
     setImageLoading(true);
     const url = `http://localhost:8000/aiapps/image/${myImageValue.id}/`;
     const data = {
@@ -37,12 +37,12 @@ export const useImageHook =() =>{
           image: data.image,
           is_main: data.is_main,
           updated_at: data.updated_at,
-          user:{
+          user: {
             displayname: data.user.displayname,
             worship: data.user.worship,
             created_user_at: data.user.created_user_at,
-            updated_user_at: data.user.updated_user_at
-          }
+            updated_user_at: data.user.updated_user_at,
+          },
         });
         showMessage({ title: "プロフィール画像に設定しました。", status: "success" });
       })
@@ -51,7 +51,7 @@ export const useImageHook =() =>{
         router.push("/user_setting");
       })
       .finally(() => setImageLoading(false));
-  }, [myToken, showMessage, myImageValue, router, setLearningImage])
+  }, [myToken, showMessage, myImageValue, router, setLearningImage]);
 
-  return{profileImageSet, imageLoading }
-}
+  return { profileImageSet, imageLoading };
+};

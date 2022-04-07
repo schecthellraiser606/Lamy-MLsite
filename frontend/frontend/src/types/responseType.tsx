@@ -17,10 +17,10 @@ export type LearningImagee = {
   image: string;
   is_main: boolean;
   updated_at: string;
-  user:{
-    displayname: string,
-    worship: string,
-    created_user_at: string,
-    updated_user_at: string
-  },
+  user: {
+    displayname: string;
+    worship: string;
+    created_user_at: string;
+    updated_user_at: string;
+  };
 };
