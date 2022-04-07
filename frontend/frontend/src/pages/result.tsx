@@ -3,7 +3,6 @@ import { ResultComment } from "../components/molecules/resultComment";
 import Snowfall from "react-snowfall";
 
 export default function ResultHome() {
-
   return (
     <Flex align="center" justify="center" flexDirection="column">
       <Snowfall />

@@ -21,7 +21,7 @@ export default function ResultHome({ imageList }: Props) {
 }
 
 export async function getStaticProps() {
-  const url = "http://localhost:8000/aiapps/image_rank/?is_main=false&ordering=-accurancy";
+  const url = "http://localhost:8000/aiapps/image_rank/";
   const res = await axios.get<LearningImagee>(url);
   const imageList = res.data;
 

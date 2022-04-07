@@ -105,12 +105,18 @@ export const ResultComment: VFC = memo(() => {
           プロフィール画像に設定する
         </PrimaryButton>
       </Flex>
-      <Divider p={3}/>
+      <Divider p={3} />
       <Flex flexDirection="row">
         <Spacer />
-        <Button rightIcon={<ArrowForwardIcon />} colorScheme="cyan" variant="outline" onClick={onClickRank} marginTop={5}>
-        ランキングページへ
-      </Button>
+        <Button
+          rightIcon={<ArrowForwardIcon />}
+          colorScheme="cyan"
+          variant="outline"
+          onClick={onClickRank}
+          marginTop={5}
+        >
+          ランキングページへ
+        </Button>
       </Flex>
     </Box>
   );
