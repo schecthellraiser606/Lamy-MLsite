@@ -8,9 +8,9 @@ export interface Props {
   imageList: Array<LearningImagee>;
 }
 
-export default function ResultHome({ imageList }: Props) {
+export default function RankingPage({ imageList }: Props) {
   return (
-    <Flex align="center" justify="center" flexDirection="column">
+    <Flex align="center" justify="center" flexDirection="column" height="100vh">
       <Snowfall />
       <Heading as="h1" fontFamily="Yuji Syuku" margin="30px" color="white">
         みんなのランキング
@@ -21,7 +21,7 @@ export default function ResultHome({ imageList }: Props) {
 }
 
 export async function getStaticProps() {
-  const url = "http://localhost:8000/aiapps/image_rank/";
+  const url = "http://webapp:8000/aiapps/image_rank/";
   const res = await axios.get<LearningImagee>(url);
   const imageList = res.data;
 

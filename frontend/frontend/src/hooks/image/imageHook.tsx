@@ -32,11 +32,11 @@ export const useImageHook = () => {
         setLearningImage({
           accurancy: data.accurancy,
           class_name: data.class_name,
-          created_at: data.created_at,
+          created_image_at: data.created_image_at,
           id: data.id,
           image: data.image,
           is_main: data.is_main,
-          updated_at: data.updated_at,
+          updated_image_at: data.updated_image_at,
           user: {
             displayname: data.user.displayname,
             worship: data.user.worship,
@@ -52,6 +52,17 @@ export const useImageHook = () => {
       })
       .finally(() => setImageLoading(false));
   }, [myToken, showMessage, myImageValue, router, setLearningImage]);
+
+  const profileImageGet = useCallback(() => {
+    setImageLoading(true);
+    const url = "http://localhost:8000/aiapps/image/";
+    axios.get<Array<LearningImagee>>(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${myToken.token}`,
+      },
+    }).then((res)=>{})
+  }, []);
 
   return { profileImageSet, imageLoading };
 };

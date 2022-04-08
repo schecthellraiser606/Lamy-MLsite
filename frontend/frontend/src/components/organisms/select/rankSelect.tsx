@@ -3,16 +3,8 @@ import { Box, Flex, Text, Divider, Select, ChakraProvider, Spacer, Stack } from 
 import themeSelect from "../../../styles/themeSelect";
 import Image from "next/image";
 import { LearningImagee } from "../../../types/responseType";
-
-export function getImageSrc(filepath: string): string | undefined {
-  if (process.env.NODE_ENV === "production") {
-    return require(`../../../image/myimage/${filepath}.jpg`);
-  } else {
-    return require(`../../../image/myimage/${filepath}.jpg`);
-  }
-}
-
-const accracy = 0.125;
+import { useImageFilter } from "../../../hooks/image/imageFilter";
+import useIsomorphicLayoutEffect from "../../../hooks/canUseDom";
 
 type Props = {
   imageList: Array<LearningImagee>;
@@ -41,6 +33,8 @@ function rankColor(rank: number) {
 export const RankSelect: VFC<Props> = memo((prop) => {
   const { imageList } = prop;
 
+  const { filterImage, filterWorship } = useImageFilter();
+
   const wlists = [
     "雪花ラミィ",
     "獅白ぼたん",
@@ -56,6 +50,11 @@ export const RankSelect: VFC<Props> = memo((prop) => {
 
   const [holo, setHolo] = useState(wlists[0]);
   const [time, setTime] = useState(term[0]);
+
+  useIsomorphicLayoutEffect(() => {
+    const para = { worship: holo, month: time, imageList: imageList };
+    filterWorship(para);
+  }, [holo, imageList, time]);
 
   const onChangeHolo = (e: ChangeEvent<HTMLSelectElement>) => setHolo(e.target.value);
   const onChangeTime = (e: ChangeEvent<HTMLSelectElement>) => setTime(e.target.value);
@@ -94,22 +93,28 @@ export const RankSelect: VFC<Props> = memo((prop) => {
           </Stack>
         </Flex>
         <Divider margin={2} />
-        {imageList.map((image, index) => (
-          <Flex flexDirection="row" align="center" key={index}>
-            <Box p={1} marginRight={5}>
-              {/* @ts-ignore */}
-              <Image width={60} height={60} src={getImageSrc("channels4_profile")} alt="rank" />
-            </Box>
-            <Stack>
-              <Text>{image.user.displayname}</Text>
-              <Text>AI精度：{image.accurancy}</Text>
-            </Stack>
-            <Spacer />
-            <Text fontSize={{ base: 30, md: 40 }} color={rankColor(index)} fontFamily="Yuji Syuku">
-              {index + 1}位
-            </Text>
+        {filterImage ? (
+          filterImage?.map((image, index) => (
+            <Flex flexDirection="row" align="center" key={index}>
+              <Box p={1} marginRight={5}>
+                {/* @ts-ignore */}
+                <Image width={60} height={60} src={image.image} alt="rank" />
+              </Box>
+              <Stack>
+                <Text>{image.user.displayname}</Text>
+                <Text>AI精度：{image.accurancy}</Text>
+              </Stack>
+              <Spacer />
+              <Text fontSize={{ base: 30, md: 40 }} color={rankColor(index)} fontFamily="Yuji Syuku">
+                {index + 1}位
+              </Text>
+            </Flex>
+          ))
+        ) : (
+          <Flex flexDirection="column" align="center">
+            <Text color="black">投稿された画像がありません</Text>
           </Flex>
-        ))}
+        )}
       </ChakraProvider>
     </Box>
   );

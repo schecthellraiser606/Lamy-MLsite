@@ -12,11 +12,11 @@ export const myImageState = atom<LearningImagee>({
   default: {
     accurancy: 0,
     class_name: "沙花叉クロヱ",
-    created_at: "",
+    created_image_at: "",
     id: 0,
     image: "",
     is_main: false,
-    updated_at: "",
+    updated_image_at: "",
     user: {
       displayname: "",
       worship: "雪花ラミィ",

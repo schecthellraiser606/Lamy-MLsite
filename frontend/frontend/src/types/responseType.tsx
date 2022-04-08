@@ -12,11 +12,11 @@ export type tokenCreateApi = {
 export type LearningImagee = {
   accurancy: number;
   class_name: string;
-  created_at: string;
+  created_image_at: string;
   id: number;
   image: string;
   is_main: boolean;
-  updated_at: string;
+  updated_image_at: string;
   user: {
     displayname: string;
     worship: string;
