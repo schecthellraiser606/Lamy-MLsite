@@ -9,6 +9,7 @@ type Paras = {
 
 export const useImageFilter = () => {
   const [filterImage, setFilterImage] = useState<Array<LearningImagee> | null>(null);
+  const [profImage, setProfImage] = useState<LearningImagee | null>(null);
 
   const filterWorship = useCallback((paras: Paras) => {
     const { worship, month, imageList } = paras;
@@ -30,5 +31,10 @@ export const useImageFilter = () => {
     }
   }, []);
 
-  return { filterImage, filterWorship };
+  const filterProfile = useCallback((myImageSet: LearningImagee[]) => {
+    const target = myImageSet.find((image) => image.is_main === true);
+    setProfImage(target ?? null);
+  }, []);
+
+  return { filterImage, profImage, filterWorship, filterProfile };
 };

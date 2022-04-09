@@ -24,11 +24,9 @@ const Home: NextPage = () => {
 
 const Animation = keyframes`
   0%, 100% {
-    /* 明るく光るよう影を重ねる */
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00dafc, 0 0 70px #00dafc, 0 0 80px #00dafc, 0 0 100px #00dafc, 0 0 150px #0097fc;
   }
   50% {
-    /* 淡く光るよう影を重ねる */
     text-shadow: 0 0 10px #fff, 0 0 20px #f2feff, 0 0 30px #f2feff, 0 0 40px #2ef1ff;
   }
 `;

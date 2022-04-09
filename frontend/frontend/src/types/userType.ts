@@ -4,11 +4,3 @@ export type AuthState = {
   id: string | undefined;
   name: string | undefined;
 };
-
-export type MyWorhip = {
-  worship: string;
-};
-
-export type MyToken = {
-  token: string;
-};

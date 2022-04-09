@@ -26,3 +26,25 @@ export const myImageState = atom<LearningImagee>({
   },
   effects_UNSTABLE: [persistAtom],
 });
+
+export const myProfileImage = atom<LearningImagee[]>({
+  key: " myProfileImage",
+  default: [
+    {
+      accurancy: 0,
+      class_name: "沙花叉クロヱ",
+      created_image_at: "",
+      id: 0,
+      image: "",
+      is_main: false,
+      updated_image_at: "",
+      user: {
+        displayname: "",
+        worship: "雪花ラミィ",
+        created_user_at: "",
+        updated_user_at: "",
+      },
+    },
+  ],
+  effects_UNSTABLE: [persistAtom],
+});

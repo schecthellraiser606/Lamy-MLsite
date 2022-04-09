@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { myImageState } from "../../store/myImageState";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { myImageState, myProfileImage } from "../../store/myImageState";
 import { myTokenState } from "../../store/myUserState";
 import { LearningImagee } from "../../types/responseType";
 import { useMessage } from "../useMessage";
@@ -12,6 +12,7 @@ export const useImageHook = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const router = useRouter();
   const [myImageValue, setLearningImage] = useRecoilState(myImageState);
+  const setProfileStore = useSetRecoilState(myProfileImage);
   const myToken = useRecoilValue(myTokenState);
 
   const profileImageSet = useCallback(() => {
@@ -56,13 +57,23 @@ export const useImageHook = () => {
   const profileImageGet = useCallback(() => {
     setImageLoading(true);
     const url = "http://localhost:8000/aiapps/image/";
-    axios.get<Array<LearningImagee>>(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${myToken.token}`,
-      },
-    }).then((res)=>{})
-  }, []);
+    axios
+      .get<Array<LearningImagee>>(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${myToken.token}`,
+        },
+      })
+      .then((res) => {
+        const data = res.data;
+        setProfileStore(data);
+      })
+      .catch((err) => {
+        showMessage({ title: "設定に失敗しました。再度ログインして下さい。", status: "error" });
+        router.push("/user_setting");
+      })
+      .finally(() => setImageLoading(false));
+  }, [myToken.token, router, setProfileStore, showMessage]);
 
-  return { profileImageSet, imageLoading };
+  return { profileImageSet, imageLoading, profileImageGet };
 };

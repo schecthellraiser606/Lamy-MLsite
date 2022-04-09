@@ -7,7 +7,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  HStack,
+  Image,
   Input,
   InputRightElement,
   Select,
@@ -20,7 +20,6 @@ import { getAuth } from "firebase/auth";
 import { useAuthHook } from "../../hooks/user/authhook";
 import { SecondaryButton } from "../../components/atoms/buttons/SecondaryButton";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { ProtectRoute } from "../../components/route/PrivateRoute";
 import useIsomorphicLayoutEffect from "../../hooks/canUseDom";
@@ -29,6 +28,9 @@ import { useRecoilValue, useResetRecoilState } from "recoil";
 import { myTokenState, myWorshipState } from "../../store/myUserState";
 import { useSettingHook } from "../../hooks/user/myuser/settingUserHooks";
 import themeSelect from "../../styles/themeSelect";
+import { myProfileImage } from "../../store/myImageState";
+import { useImageFilter } from "../../hooks/image/imageFilter";
+import { useImageHook } from "../../hooks/image/imageHook";
 
 export function getImageSrc(filepath: string): string | undefined {
   if (process.env.NODE_ENV === "production") {
@@ -37,9 +39,6 @@ export function getImageSrc(filepath: string): string | undefined {
     return require(`../../image/myimage/channels4_profile.jpg`);
   }
 }
-
-const accracy = 0.125;
-const className = "沙花叉クロヱ";
 
 // eslint-disable-next-line react/display-name
 export default function MyPage() {
@@ -58,9 +57,13 @@ export default function MyPage() {
   const signInUser = auth.currentUser;
   const myWorship = useRecoilValue(myWorshipState);
   const myTokenValue = useRecoilValue(myTokenState);
+  const myProfileImages = useRecoilValue(myProfileImage);
 
   const router = useRouter();
   const query = router.query;
+
+  const { profImage, filterProfile } = useImageFilter();
+  const { profileImageGet } = useImageHook();
 
   const { loading, userUpdateName, userUpdateEmail, userSignOut } = useAuthHook();
   const { myLoading, userWorshipUpdate, userMyNameUpdate } = useSettingHook();
@@ -72,6 +75,7 @@ export default function MyPage() {
   const resetMyToken = useResetRecoilState(myTokenState);
 
   useIsomorphicLayoutEffect(() => {
+    filterProfile(myProfileImages);
     setName(signInUser?.displayName ?? "");
     setEmail(signInUser?.email ?? "");
     setWorship(myWorship.worship);
@@ -109,15 +113,10 @@ export default function MyPage() {
                 <Divider my={{ base: 3, md: 7 }} color="black" />
 
                 <Flex align="center" justify="center" flexDirection="column">
-                  <Image
-                    width={400}
-                    height={400}
-                    src={getImageSrc("../image/myimage/channels4_profile.png")}
-                    alt="Myimage"
-                  />
+                  <Image w={400} src={profImage?.image} alt="Myimage" />
                   <Stack py={{ base: 1, md: 2 }}>
-                    <Text>真の姿：{className}</Text>
-                    <Text>AI精度：{accracy}</Text>
+                    <Text>真の姿：{profImage?.class_name}</Text>
+                    <Text>AI精度：{profImage?.accurancy}</Text>
                   </Stack>
                 </Flex>
 
