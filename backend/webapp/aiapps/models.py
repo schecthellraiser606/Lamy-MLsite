@@ -117,7 +117,7 @@ class Images(models.Model):
     
 class Threads(models.Model):
   id = models.AutoField(primary_key=True)
-  user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='user_thread')
+  user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='anonymous', related_name='user_thread')
   title =  models.CharField(max_length=30)
   text = models.TextField(blank=True)
   created_thread_at = models.DateTimeField(auto_now_add=True)
@@ -128,7 +128,7 @@ class Threads(models.Model):
   
 class Comments(models.Model):
   id = models.AutoField(primary_key=True)
-  user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='匿名', related_name='user_comment')
+  user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='anonymous', related_name='user_comment')
   threads = models.ForeignKey(Threads, on_delete=models.CASCADE, related_name='comment_thread')
   parent_id = models.PositiveIntegerField(blank=True, null=True)
   text = models.TextField(blank=True)

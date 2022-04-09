@@ -24,3 +24,17 @@ export type LearningImagee = {
     updated_user_at: string;
   };
 };
+
+export type Thread = {
+  id: number;
+  user: {
+    displayname: string;
+    worship: string;
+    created_user_at: string;
+    updated_user_at: string;
+  };
+  title: string;
+  text: string;
+  created_thread_at: string;
+  updated_thread_at: string;
+};

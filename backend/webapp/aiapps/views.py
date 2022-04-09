@@ -70,7 +70,7 @@ class ManagePhotoViewSet(viewsets.ModelViewSet):
 class ThreadGetViewSet(generics.ListAPIView):
   queryset = Threads.objects.all()
   serializer_class = ThreadSerializer
-  filter_backends = (filters.OrderingFilter)
+  filter_backends = (filters.OrderingFilter,)
   ordering_fields = ('updated_thread_at')
   ordering = ('updated_thread_at')
   
@@ -85,7 +85,7 @@ class CommentGetView(generics.ListAPIView):
   queryset = Comments.objects.order_by('-updated_comment_at')
   serializer_class = CommentsSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated, OwnObjectPermission)
+  permission_classes = (IsAuthenticated, OwnObjectPermission,)
   filter_backends = (DjangoFilterBackend, )
   filter_fields = ('threads',)
 
@@ -93,5 +93,5 @@ class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.all()
   serializer_class = CommentsSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated, OwnObjectPermission)
+  permission_classes = (IsAuthenticated, OwnObjectPermission,)
 

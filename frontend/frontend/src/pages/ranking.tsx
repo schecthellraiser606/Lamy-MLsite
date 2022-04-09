@@ -25,6 +25,12 @@ export async function getStaticProps() {
   const res = await axios.get<LearningImagee>(url);
   const imageList = res.data;
 
+  if (!imageList) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       imageList,

@@ -70,7 +70,7 @@ class ThreadSerializer(serializers.ModelSerializer):
     fields = ['id', 'user', 'uid', 'title', 'text', 'created_thread_at', 'updated_thread_at']
     
   def validate_title(self, value):
-    if value > 30:
+    if len(value) >= 30:
       raise serializers.ValidationError("title is too long")
     return value
   
