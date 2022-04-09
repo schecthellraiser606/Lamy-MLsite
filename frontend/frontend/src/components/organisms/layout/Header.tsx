@@ -33,12 +33,26 @@ export const Header: VFC = memo(() => {
               fontSize="xl"
               fontFamily="Yuji Syuku"
               borderBottom="1px"
-              marginRight={4}
+              marginRight={5}
               _hover={{ cursor: "pointer" }}
             >
               掲示板一覧
             </Heading>
           </Link>
+
+          <Link href="/ranking" passHref>
+            <Heading
+              as="h3"
+              fontSize="xl"
+              fontFamily="Yuji Syuku"
+              borderBottom="1px"
+              marginRight={5}
+              _hover={{ cursor: "pointer" }}
+            >
+              ランキング
+            </Heading>
+          </Link>
+
           <Box pr={4}>
             <AvatorPopover />
           </Box>

@@ -16,9 +16,10 @@ export default function ThreadIndex({ threads }: Props) {
       </Heading>
       <ThreadForm />
       <Box p={2} w="90%" h="100%" bg="cyan.700" m={4} borderRadius="7px" padding={5}>
+        <Heading p={2} fontFamily="Yuji Syuku">一覧</Heading>
         {threads.map((thread, index) => (
           <Stack key={index}>
-            <Box bg="gray.500" m={1} borderRadius="6px" p={3}>
+            <Box bg="gray.600" m={1} borderRadius="6px" p={3}>
               <Flex align="center" flexDirection="row">
                 <div>
                   <Flex align="center" flexDirection="row">
@@ -32,8 +33,8 @@ export default function ThreadIndex({ threads }: Props) {
                 </div>
                 <Spacer />
                 <Flex align="center" flexDirection="column">
-                  <Text>作成者</Text>
-                  <Text>{thread.user.displayname}</Text>
+                  <Text fontFamily="Yuji Syuku">作成者</Text>
+                  <Text fontFamily="Yuji Syuku">{thread.user.displayname}</Text>
                 </Flex>
               </Flex>
             </Box>

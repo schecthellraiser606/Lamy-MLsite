@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, FormControl, FormLabel, Input, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, FormControl, FormLabel, Heading, Input, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, memo, useState, VFC } from "react";
 import { useRecoilValue } from "recoil";
@@ -32,19 +32,20 @@ export const ThreadForm: VFC = memo(() => {
   return (
     <>
       {signInUser.isSignedIn ? (
-        <Box bgColor="cyan.700" m={4} p={2} w="90%" borderRadius="7px">
+        <Box bgColor="cyan.800" m={4} p={2} w="80%" borderRadius="7px">
+          <Heading p={2} fontFamily="Yuji Syuku">新規作成</Heading>
           <Stack textAlign="center">
             <FormControl>
               <FormLabel>タイトル</FormLabel>
-              <Input value={title} onChange={onChangeTitle} borderColor="white" bgColor="gray.500" />
+              <Input value={title} onChange={onChangeTitle} borderColor="white" bgColor="gray.600" />
             </FormControl>
             <FormControl>
               <FormLabel>内容</FormLabel>
-              <Input value={text} onChange={onChangeText} borderColor="white" bgColor="gray.500" />
+              <Input value={text} onChange={onChangeText} borderColor="white" bgColor="gray.600" />
             </FormControl>
           </Stack>
           <Divider p={1} />
-          <Flex flexDirection="row" align="center">
+          <Flex flexDirection="row" align="center" marginTop={3}>
             <Spacer />
             <SecondaryButton onClick={onClick} loading={threadLoading}>
               掲示板作成
@@ -52,7 +53,7 @@ export const ThreadForm: VFC = memo(() => {
           </Flex>
         </Box>
       ) : (
-        <Text>掲示版を作成するためにはログインが必要じゃ。</Text>
+        <Text fontFamily="Yuji Syuku">掲示版を作成するためにはログインが必要じゃ。</Text>
       )}
     </>
   );
