@@ -18,7 +18,9 @@ export default function ThreadDetail({ comments }: Props) {
   return (
     <Flex align="center" justify="center" flexDirection="column" h="100vh">
       <ThreadTitle />
-      <ScrollBottom />
+      <Flex flexDirection="row-reverse" w="90%">
+        <ScrollBottom />
+      </Flex>
       <Box p={2} bg="gray.700" m={4} borderRadius="7px" padding={5} w="90%">
         <Stack>
           {comments[0] ? (

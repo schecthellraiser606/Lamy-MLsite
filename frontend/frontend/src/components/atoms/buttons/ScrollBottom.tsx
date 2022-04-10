@@ -40,7 +40,7 @@ export const ScrollBottom: VFC = memo(() => {
   const activeStyle: CSSProperties | undefined = {
     opacity: 1,
     transition: "0.5s",
-    margin: "5px",
+    margin: "10px",
   };
   const style = isButtonActive ? activeStyle : normalStyle;
 

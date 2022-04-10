@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../store/userState";
 import styled from "styled-components";
 import { Comments } from "../../types/responseType";
-import { Divider, Flex, useDisclosure, Button, Stack, Spacer, Box, Text } from "@chakra-ui/react";
+import { Flex, useDisclosure, Button, Stack, Spacer, Text } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import { DeleteButton } from "../atoms/buttons/DeleteButton";
 import { useCommentHook } from "../../hooks/thread/commentHook";
@@ -59,16 +59,19 @@ export const CommentBox: VFC<Props> = memo((props) => {
                 ) : (
                   <></>
                 )}
-                <Text color="black" fontFamily="Yuji Syuku">
-                  {comment.text}
-                </Text>
-
                 {comment.text === "This Data was Deleted" ? (
-                  <></>
+                  <Text as="i" color="black" fontFamily="Yuji Syuku">
+                    {comment.text}
+                  </Text>
                 ) : (
-                  <DeleteButton onClick={onOpen} loading={commentLoading}>
-                    削除
-                  </DeleteButton>
+                  <>
+                    <Text color="black" fontFamily="Yuji Syuku">
+                      {comment.text}
+                    </Text>
+                    <DeleteButton onClick={onOpen} loading={commentLoading}>
+                      削除
+                    </DeleteButton>
+                  </>
                 )}
               </Stack>
             </MessageRight>
@@ -94,22 +97,29 @@ export const CommentBox: VFC<Props> = memo((props) => {
               ) : (
                 <></>
               )}
-              <Text color="black" fontFamily="Yuji Syuku">
-                {comment.text}
-              </Text>
-              <Divider p={1} />
-              <Flex flexDirection="row" align="center">
-                <Spacer />
-                <Button
-                  rightIcon={<ArrowRightIcon />}
-                  colorScheme="cyan"
-                  variant="outline"
-                  onClick={onClickRep}
-                  size="xs"
-                >
-                  返信する
-                </Button>
-              </Flex>
+              {comment.text === "This Data was Deleted" ? (
+                <Text as="i" color="black" fontFamily="Yuji Syuku">
+                  {comment.text}
+                </Text>
+              ) : (
+                <>
+                  <Text color="black" fontFamily="Yuji Syuku">
+                    {comment.text}
+                  </Text>
+                  <Flex flexDirection="row" align="center">
+                    <Spacer />
+                    <Button
+                      rightIcon={<ArrowRightIcon />}
+                      colorScheme="cyan"
+                      variant="outline"
+                      onClick={onClickRep}
+                      size="xs"
+                    >
+                      返信する
+                    </Button>
+                  </Flex>
+                </>
+              )}
             </Stack>
           </MessageLeft>
         </Flex>
