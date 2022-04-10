@@ -1,9 +1,12 @@
 import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { GetServerSidePropsContext } from "next";
+import { useRecoilValue } from "recoil";
+import { ScrollBottom } from "../../components/atoms/buttons/ScrollBottom";
 import { CommentBox } from "../../components/molecules/CommentBox";
 import { ThreadTitle } from "../../components/molecules/threadTitle";
-import { ProtectRoute } from "../../components/route/PrivateRoute";
+import { CommentForm } from "../../components/organisms/PostForm/commentForm";
+import { userState } from "../../store/userState";
 import { Comments } from "../../types/responseType";
 
 export interface Props {
@@ -11,27 +14,28 @@ export interface Props {
 }
 
 export default function ThreadDetail({ comments }: Props) {
+  const signInUser = useRecoilValue(userState);
   return (
-    <ProtectRoute>
-      <Flex align="center" justify="center" flexDirection="column">
-        <ThreadTitle />
-        <Box p={2} bg="gray.700" m={4} borderRadius="7px" padding={5}>
-          <Stack>
-            {comments[0] ? (
-              comments.map((comment, index) => <CommentBox comment={comment} key={index} />)
-            ) : (
-              <Text>コメントがまだありません</Text>
-            )}
-          </Stack>
-        </Box>
-      </Flex>
-    </ProtectRoute>
+    <Flex align="center" justify="center" flexDirection="column" h="100vh">
+      <ThreadTitle />
+      <ScrollBottom />
+      <Box p={2} bg="gray.700" m={4} borderRadius="7px" padding={5} w="90%">
+        <Stack>
+          {comments[0] ? (
+            comments.map((comment, index) => <CommentBox comment={comment} key={index} index={index} />)
+          ) : (
+            <Text>コメントがまだありません</Text>
+          )}
+        </Stack>
+      </Box>
+      {signInUser.isSignedIn ? <CommentForm /> : <></>}
+    </Flex>
   );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const param = context.params;
-  const url = `http://webapp:8000/aiapps/comment_all/?thread_id=${param?.id}`;
+  const url = `http://webapp:8000/aiapps/comment_all/?threads=${param?.id}`;
   const res = await axios.get<Array<Comments>>(url);
   const comments = res.data;
 

@@ -21,7 +21,6 @@ import { useAuthHook } from "../../hooks/user/authhook";
 import { SecondaryButton } from "../../components/atoms/buttons/SecondaryButton";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import { ProtectRoute } from "../../components/route/PrivateRoute";
 import useIsomorphicLayoutEffect from "../../hooks/canUseDom";
 import Snowfall from "react-snowfall";
 import { useRecoilValue, useResetRecoilState } from "recoil";
@@ -31,14 +30,6 @@ import themeSelect from "../../styles/themeSelect";
 import { myProfileImage } from "../../store/myImageState";
 import { useImageFilter } from "../../hooks/image/imageFilter";
 import { useImageHook } from "../../hooks/image/imageHook";
-
-export function getImageSrc(filepath: string): string | undefined {
-  if (process.env.NODE_ENV === "production") {
-    return require(`../image/radio/${filepath}.png`);
-  } else {
-    return require(`../../image/myimage/channels4_profile.jpg`);
-  }
-}
 
 // eslint-disable-next-line react/display-name
 export default function MyPage() {
@@ -102,106 +93,104 @@ export default function MyPage() {
   };
 
   return (
-    <ProtectRoute>
-      <ChakraProvider theme={themeSelect}>
-        <Snowfall />
-        <Flex align="center" justify="center">
-          <Box bg="gray.400" padding={{ base: 3, md: 5 }} w={{ base: "sm", md: "3xl" }} m={{ base: 5, md: 20 }}>
-            {query.id === signInUser?.uid ? (
-              <>
-                <Heading fontSize={{ base: "lg", md: "2xl" }}>ユーザ情報</Heading>
-                <Divider my={{ base: 3, md: 7 }} color="black" />
+    <ChakraProvider theme={themeSelect}>
+      <Snowfall />
+      <Flex align="center" justify="center">
+        <Box bg="gray.400" padding={{ base: 3, md: 5 }} w={{ base: "sm", md: "3xl" }} m={{ base: 5, md: 20 }}>
+          {query.id === signInUser?.uid ? (
+            <>
+              <Heading fontSize={{ base: "lg", md: "2xl" }}>ユーザ情報</Heading>
+              <Divider my={{ base: 3, md: 7 }} color="black" />
 
-                <Flex align="center" justify="center" flexDirection="column">
-                  <Image w={400} src={profImage?.image} alt="Myimage" />
-                  <Stack py={{ base: 1, md: 2 }}>
-                    <Text>真の姿：{profImage?.class_name}</Text>
-                    <Text>AI精度：{profImage?.accurancy}</Text>
-                  </Stack>
-                </Flex>
-
-                <Divider my={{ base: 2, md: 6 }} color="black" />
-                <Stack textAlign="center">
-                  <FormControl>
-                    <FormLabel>ユーザ名</FormLabel>
-                    <Input
-                      value={name}
-                      onChange={onChangeName}
-                      isReadOnly={myTokenValue.token ? false : true}
-                      borderColor="black"
-                    />
-                    <InputRightElement>
-                      <Button size="xs" onClick={onClickUpdateName} isLoading={loading || myLoading} color="black">
-                        変更
-                      </Button>
-                    </InputRightElement>
-                  </FormControl>
-
-                  <Spacer />
-
-                  <FormControl>
-                    <FormLabel>Email Address</FormLabel>
-                    <Input
-                      value={email}
-                      onChange={onChangeEmail}
-                      isReadOnly={myTokenValue.token ? false : true}
-                      borderColor="black"
-                    />
-                    <InputRightElement>
-                      <Button size="xs" onClick={onClickUpdateEmail} isLoading={loading || myLoading} color="black">
-                        変更
-                      </Button>
-                    </InputRightElement>
-                  </FormControl>
-
-                  <Spacer />
-
-                  <FormControl>
-                    <FormLabel>推し</FormLabel>
-                    <Select
-                      value={worship}
-                      onChange={onChangeWorship}
-                      isReadOnly={myTokenValue.token ? false : true}
-                      borderColor="black"
-                    >
-                      {wlists.map((list, index) => (
-                        <option value={list} key={index}>
-                          {list}
-                        </option>
-                      ))}
-                    </Select>
-                    <InputRightElement>
-                      <Button size="xs" onClick={onClickUpdateWorship} isLoading={loading || myLoading} color="black">
-                        変更
-                      </Button>
-                    </InputRightElement>
-                  </FormControl>
+              <Flex align="center" justify="center" flexDirection="column">
+                <Image w={400} src={profImage?.image} alt="Myimage" />
+                <Stack py={{ base: 1, md: 2 }}>
+                  <Text>真の姿：{profImage?.class_name}</Text>
+                  <Text>AI精度：{profImage?.accurancy}</Text>
                 </Stack>
+              </Flex>
 
-                <Divider my={{ base: 2, md: 6 }} color="black" />
+              <Divider my={{ base: 2, md: 6 }} color="black" />
+              <Stack textAlign="center">
+                <FormControl>
+                  <FormLabel>ユーザ名</FormLabel>
+                  <Input
+                    value={name}
+                    onChange={onChangeName}
+                    isReadOnly={myTokenValue.token ? false : true}
+                    borderColor="black"
+                  />
+                  <InputRightElement>
+                    <Button size="xs" onClick={onClickUpdateName} isLoading={loading || myLoading} color="black">
+                      変更
+                    </Button>
+                  </InputRightElement>
+                </FormControl>
 
-                <Box textAlign="right">
-                  <SecondaryButton disable={false} loading={loading} onClick={onClickLogout}>
-                    ログアウト
-                  </SecondaryButton>
-                </Box>
-              </>
-            ) : (
-              <>
-                <Heading fontSize={{ base: "xl", md: "3xl" }}>
-                  ユーザ情報にてエラーがあります。
-                  <br />
-                  トップページへお戻りください。
-                </Heading>
-                <Divider my={{ base: 3, md: 7 }} color="black" />
-                <Button rightIcon={<ArrowForwardIcon />} colorScheme="cyan" variant="outline" onClick={onClickTop}>
-                  トップページへ
-                </Button>
-              </>
-            )}
-          </Box>
-        </Flex>
-      </ChakraProvider>
-    </ProtectRoute>
+                <Spacer />
+
+                <FormControl>
+                  <FormLabel>Email Address</FormLabel>
+                  <Input
+                    value={email}
+                    onChange={onChangeEmail}
+                    isReadOnly={myTokenValue.token ? false : true}
+                    borderColor="black"
+                  />
+                  <InputRightElement>
+                    <Button size="xs" onClick={onClickUpdateEmail} isLoading={loading || myLoading} color="black">
+                      変更
+                    </Button>
+                  </InputRightElement>
+                </FormControl>
+
+                <Spacer />
+
+                <FormControl>
+                  <FormLabel>推し</FormLabel>
+                  <Select
+                    value={worship}
+                    onChange={onChangeWorship}
+                    isReadOnly={myTokenValue.token ? false : true}
+                    borderColor="black"
+                  >
+                    {wlists.map((list, index) => (
+                      <option value={list} key={index}>
+                        {list}
+                      </option>
+                    ))}
+                  </Select>
+                  <InputRightElement>
+                    <Button size="xs" onClick={onClickUpdateWorship} isLoading={loading || myLoading} color="black">
+                      変更
+                    </Button>
+                  </InputRightElement>
+                </FormControl>
+              </Stack>
+
+              <Divider my={{ base: 2, md: 6 }} color="black" />
+
+              <Box textAlign="right">
+                <SecondaryButton disable={false} loading={loading} onClick={onClickLogout}>
+                  ログアウト
+                </SecondaryButton>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Heading fontSize={{ base: "xl", md: "3xl" }}>
+                ユーザ情報にてエラーがあります。
+                <br />
+                トップページへお戻りください。
+              </Heading>
+              <Divider my={{ base: 3, md: 7 }} color="black" />
+              <Button rightIcon={<ArrowForwardIcon />} colorScheme="cyan" variant="outline" onClick={onClickTop}>
+                トップページへ
+              </Button>
+            </>
+          )}
+        </Box>
+      </Flex>
+    </ChakraProvider>
   );
 }

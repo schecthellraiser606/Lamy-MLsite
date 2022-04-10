@@ -1,26 +1,31 @@
 import { memo, useRef, VFC } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../store/userState";
 import styled from "styled-components";
 import { Comments } from "../../types/responseType";
-import { Divider, Flex, useDisclosure } from "@chakra-ui/react";
+import { Divider, Flex, useDisclosure, Button, Stack, Spacer, Box, Text } from "@chakra-ui/react";
+import { ArrowRightIcon } from "@chakra-ui/icons";
 import { DeleteButton } from "../atoms/buttons/DeleteButton";
 import { useCommentHook } from "../../hooks/thread/commentHook";
 import { AlertDialogComp } from "./Alert/AlertDialog";
 import { AvatorOnComment } from "./Avator/avatorOnComment";
+import AnchorLink from "react-anchor-link-smooth-scroll";
+import { parentCommentState } from "../../store/parentCommentState";
 
 type Props = {
   comment: Comments;
   key: number;
+  index: number;
 };
 
 // eslint-disable-next-line react/display-name
 export const CommentBox: VFC<Props> = memo((props) => {
-  const { comment } = props;
+  const { comment, index } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   const signInUser = useRecoilValue(userState);
+  const setParent = useSetRecoilState(parentCommentState);
   const { commentLoading, commentDelete } = useCommentHook();
 
   const deleteHook = () => {
@@ -28,19 +33,45 @@ export const CommentBox: VFC<Props> = memo((props) => {
     onClose();
   };
 
+  const onClickRep = () => {
+    setParent({ id: comment.id });
+    const element = document.documentElement;
+    const bottom = element.scrollHeight - element.clientHeight;
+    window.scrollTo({
+      top: bottom,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       {signInUser.id === comment.user.uid ? (
         <>
-          <Flex flexDirection="row" align="center">
-            <MessageRight>
-              {comment.text}
-              <Divider p={1} />
-              <DeleteButton onClick={onOpen} loading={commentLoading}>
-                削除
-              </DeleteButton>
-            </MessageRight>
+          <Flex flexDirection="row-reverse" align="center" id={index.toString()}>
             <AvatorOnComment comment={comment} />
+            <MessageRight>
+              <Stack>
+                {comment.parent_id ? (
+                  <>
+                    <AnchorLink href={"#" + comment.parent_id.toString()}>{">>" + comment.parent_id}</AnchorLink>
+                    <br />
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Text color="black" fontFamily="Yuji Syuku">
+                  {comment.text}
+                </Text>
+
+                {comment.text === "This Data was Deleted" ? (
+                  <></>
+                ) : (
+                  <DeleteButton onClick={onOpen} loading={commentLoading}>
+                    削除
+                  </DeleteButton>
+                )}
+              </Stack>
+            </MessageRight>
           </Flex>
           <AlertDialogComp
             isOpen={isOpen}
@@ -51,11 +82,35 @@ export const CommentBox: VFC<Props> = memo((props) => {
           />
         </>
       ) : (
-        <Flex flexDirection="row">
+        <Flex flexDirection="row" id={index.toString()}>
           <AvatorOnComment comment={comment} />
           <MessageLeft>
-            {comment.text}
-            <Divider p={1} />
+            <Stack>
+              {comment.parent_id ? (
+                <>
+                  <AnchorLink href={"#" + comment.parent_id.toString()}>{">>" + comment.parent_id}</AnchorLink>
+                  <br />
+                </>
+              ) : (
+                <></>
+              )}
+              <Text color="black" fontFamily="Yuji Syuku">
+                {comment.text}
+              </Text>
+              <Divider p={1} />
+              <Flex flexDirection="row" align="center">
+                <Spacer />
+                <Button
+                  rightIcon={<ArrowRightIcon />}
+                  colorScheme="cyan"
+                  variant="outline"
+                  onClick={onClickRep}
+                  size="xs"
+                >
+                  返信する
+                </Button>
+              </Flex>
+            </Stack>
           </MessageLeft>
         </Flex>
       )}
@@ -67,7 +122,7 @@ const MessageRight = styled.div`
   position: relative;
   display: inline-block;
   padding: 0 15px;
-  width: auto;
+  width: 90%;
   min-width: 115px;
   height: auto;
   line-height: 34px;
@@ -109,7 +164,7 @@ const MessageLeft = styled.div`
   position: relative;
   display: inline-block;
   padding: 0 15px;
-  width: auto;
+  width: 90%;
   min-width: 115px;
   height: auto;
   line-height: 34px;

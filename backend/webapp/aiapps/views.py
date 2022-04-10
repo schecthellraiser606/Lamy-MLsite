@@ -83,7 +83,7 @@ class ManageThreadView(viewsets.ModelViewSet):
   permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
   
 class CommentGetView(generics.ListAPIView):
-  queryset = Comments.objects.select_related('user', 'threads').order_by('-updated_comment_at')
+  queryset = Comments.objects.select_related('user', 'threads').order_by('created_comment_at')
   serializer_class = CommentsSerializer
   filter_backends = (DjangoFilterBackend,)
   filter_fields = ('threads',)

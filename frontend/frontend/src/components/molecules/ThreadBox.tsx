@@ -25,7 +25,7 @@ export const ThreadBox: VFC<Props> = memo((props) => {
   };
 
   return (
-    <Box bg="gray.600" m={1} borderRadius="6px" p={3}>
+    <Box bg="gray.600" m={1} borderRadius="6px" p={3} _hover={{ cursor: "pointer" }}>
       <Flex align="center" flexDirection="row">
         <div>
           <Flex align="center" flexDirection="row">

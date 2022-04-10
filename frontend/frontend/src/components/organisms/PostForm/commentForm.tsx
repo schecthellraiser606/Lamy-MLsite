@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, FormControl, FormLabel, Heading, Spacer, Text, Textarea } from "@chakra-ui/react";
+import { Box, Divider, Flex, FormControl, FormLabel, Heading, Spacer, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, memo, useState, VFC } from "react";
 import { useRecoilValue } from "recoil";
@@ -15,18 +15,17 @@ export const CommentForm: VFC = memo(() => {
   const [text, setText] = useState("");
   const signInUser = useRecoilValue(userState);
   const thread = useRecoilValue(threadState);
-  const parent_id = useRecoilValue(parentCommentState);
+  const parent = useRecoilValue(parentCommentState);
 
   const { commentLoading, commentPost } = useCommentHook();
   const { showMessage } = useMessage();
 
   const onChangeText = (e: ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value);
-
   const isText = !text;
 
   const onClick = () => {
     if (signInUser.id) {
-      commentPost(signInUser.id, thread.id, parent_id.id, text);
+      commentPost(signInUser.id, thread.id, parent.id, text);
     } else {
       showMessage({ title: "ログインして下さい。", status: "error" });
       router.push("/login");
@@ -40,11 +39,14 @@ export const CommentForm: VFC = memo(() => {
           <Heading p={2} fontFamily="Yuji Syuku">
             コメント投稿
           </Heading>
-          <FormControl isInvalid={isText}>
-            <FormLabel>内容</FormLabel>
-            <Textarea value={text} onChange={onChangeText} borderColor="white" bgColor="gray.600" />
-          </FormControl>
-          <Divider p={1} />
+          <Stack>
+            <Text>返信先:{parent.id ? parent.id : "なし"}</Text>
+            <FormControl isInvalid={isText}>
+              <FormLabel>内容:</FormLabel>
+              <Textarea value={text} onChange={onChangeText} borderColor="white" bgColor="gray.600" />
+            </FormControl>
+          </Stack>
+          <Divider />
           <Flex flexDirection="row" align="center" marginTop={3}>
             <Spacer />
             <SecondaryButton onClick={onClick} disable={isText} loading={commentLoading}>

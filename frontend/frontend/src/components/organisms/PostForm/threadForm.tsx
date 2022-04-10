@@ -34,7 +34,7 @@ export const ThreadForm: VFC = memo(() => {
   return (
     <>
       {signInUser.isSignedIn ? (
-        <Box bgColor="cyan.800" m={4} p={2} w="80%" borderRadius="7px">
+        <Box bgColor="cyan.800" m={4} p={2} w="90%" borderRadius="7px">
           <Heading p={2} fontFamily="Yuji Syuku">
             新規作成
           </Heading>
@@ -48,7 +48,7 @@ export const ThreadForm: VFC = memo(() => {
               <Input value={text} onChange={onChangeText} borderColor="white" bgColor="gray.600" />
             </FormControl>
           </Stack>
-          <Divider p={1} />
+          <Divider />
           <Flex flexDirection="row" align="center" marginTop={3}>
             <Spacer />
             <SecondaryButton onClick={onClick} disable={isTitle} loading={threadLoading}>

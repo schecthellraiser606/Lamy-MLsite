@@ -27,6 +27,7 @@ export const AvatorOnComment: VFC<Props> = memo((props) => {
     <Popover>
       <PopoverTrigger>
         <IconButton
+          margin={2}
           aria-label="commentAvator"
           size="sm"
           variant="unstyled"
@@ -40,8 +41,8 @@ export const AvatorOnComment: VFC<Props> = memo((props) => {
           <PopoverCloseButton />
           <PopoverBody>
             <Stack>
-              <Text>名前: {comment.user.displayname}</Text>
-              <Text>推し: {comment.user.worship}</Text>
+              <Text>名前:　{comment.user.displayname}</Text>
+              <Text>推し:　{comment.user.worship}</Text>
             </Stack>
           </PopoverBody>
         </PopoverContent>

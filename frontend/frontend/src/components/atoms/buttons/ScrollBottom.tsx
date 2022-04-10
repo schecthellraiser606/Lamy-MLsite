@@ -40,7 +40,7 @@ export const ScrollBottom: VFC = memo(() => {
   const activeStyle: CSSProperties | undefined = {
     opacity: 1,
     transition: "0.5s",
-    margin: "auto",
+    margin: "5px",
   };
   const style = isButtonActive ? activeStyle : normalStyle;
 
@@ -50,7 +50,6 @@ export const ScrollBottom: VFC = memo(() => {
       color="green.700"
       aria-label="Go to Bottom"
       borderRadius="5%"
-      marginRight="10"
       style={style}
       onClick={GoBottom}
       boxShadow="md, md"

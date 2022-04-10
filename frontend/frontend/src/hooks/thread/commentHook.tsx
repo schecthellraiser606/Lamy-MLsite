@@ -3,12 +3,14 @@ import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { myTokenState } from "../../store/myUserState";
+import { threadState } from "../../store/threadState";
 import { useMessage } from "../useMessage";
 
 export const useCommentHook = () => {
   const { showMessage } = useMessage();
   const [commentLoading, setCommentLoading] = useState(false);
   const myToken = useRecoilValue(myTokenState);
+  const thread = useRecoilValue(threadState);
   const router = useRouter();
 
   const commentPost = useCallback(
@@ -30,6 +32,10 @@ export const useCommentHook = () => {
         })
         .then((res) => {
           showMessage({ title: "コメントを投稿しました。", status: "success" });
+          router.push({
+            pathname: "/thread/[id]",
+            query: { id: thread.id },
+          });
         })
         .catch((err) => {
           showMessage({ title: "コメントを投稿できません。再度ログインして下さい。", status: "error" });
@@ -39,13 +45,13 @@ export const useCommentHook = () => {
           setCommentLoading(false);
         });
     },
-    [myToken.token, showMessage, router],
+    [myToken.token, showMessage, router, thread.id],
   );
 
   const commentDelete = useCallback(
     (comment_id: number) => {
       setCommentLoading(true);
-      const url = `http://localhost:8000/aiapps/comment/${comment_id}`;
+      const url = `http://localhost:8000/aiapps/comment/${comment_id}/`;
       const data = {
         text: "This Data was Deleted",
       };
@@ -58,6 +64,10 @@ export const useCommentHook = () => {
         })
         .then((res) => {
           showMessage({ title: "コメントを削除しました。", status: "success" });
+          router.push({
+            pathname: "/thread/[id]",
+            query: { id: thread.id },
+          });
         })
         .catch((err) => {
           showMessage({ title: "コメントを削除できません。再度ログインして下さい。", status: "error" });
@@ -67,7 +77,7 @@ export const useCommentHook = () => {
           setCommentLoading(false);
         });
     },
-    [myToken.token, router, showMessage],
+    [myToken.token, router, showMessage, thread.id],
   );
 
   return { commentLoading, commentPost, commentDelete };
