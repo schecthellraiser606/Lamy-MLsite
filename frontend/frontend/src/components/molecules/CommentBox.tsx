@@ -16,10 +16,10 @@ export const CommentBox: VFC<Props> = memo((props) => {
 
   return (
     <>
-      {signInUser.id === comment.name ? (
-        <MessageRight>{comment.body}</MessageRight>
+      {signInUser.id === comment.user.uid ? (
+        <MessageRight>{comment.text}</MessageRight>
       ) : (
-        <MessageLeft>{comment.body}</MessageLeft>
+        <MessageLeft>{comment.text}</MessageLeft>
       )}
     </>
   );

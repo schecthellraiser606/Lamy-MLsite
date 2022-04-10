@@ -70,7 +70,8 @@ class ManagePhotoViewSet(viewsets.ModelViewSet):
 class ThreadGetViewSet(generics.ListAPIView):
   queryset = Threads.objects.select_related('user').all()
   serializer_class = ThreadSerializer
-  filter_backends = (filters.OrderingFilter,)
+  filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+  filter_fields = ('id',)
   ordering_fields = ('updated_thread_at')
   ordering = ('updated_thread_at')
   

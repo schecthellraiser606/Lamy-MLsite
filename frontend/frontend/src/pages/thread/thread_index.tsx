@@ -1,6 +1,7 @@
 import { Box, Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
 import Link from "next/link";
+import { ThreadBox } from "../../components/molecules/ThreadBox";
 import { ThreadForm } from "../../components/organisms/PostForm/threadForm";
 import { Thread } from "../../types/responseType";
 
@@ -19,29 +20,11 @@ export default function ThreadIndex({ threads }: Props) {
         <Heading p={2} fontFamily="Yuji Syuku">
           一覧
         </Heading>
-        {threads.map((thread, index) => (
-          <Stack key={index}>
-            <Box bg="gray.600" m={1} borderRadius="6px" p={3}>
-              <Flex align="center" flexDirection="row">
-                <div>
-                  <Flex align="center" flexDirection="row">
-                    <Heading fontSize={{ base: "md", md: "3xl" }} fontFamily="Yuji Syuku">
-                      <Link href={`/thread/${thread.id}`}>
-                        <a>{thread.title}</a>
-                      </Link>
-                    </Heading>
-                  </Flex>
-                  <Text m={1}>{thread.text}</Text>
-                </div>
-                <Spacer />
-                <Flex align="center" flexDirection="column">
-                  <Text fontFamily="Yuji Syuku">作成者</Text>
-                  <Text fontFamily="Yuji Syuku">{thread.user.displayname}</Text>
-                </Flex>
-              </Flex>
-            </Box>
-          </Stack>
-        ))}
+        <Stack>
+          {threads.map((thread, index) => (
+            <ThreadBox thread={thread} key={index} />
+          ))}
+        </Stack>
       </Box>
     </Flex>
   );
