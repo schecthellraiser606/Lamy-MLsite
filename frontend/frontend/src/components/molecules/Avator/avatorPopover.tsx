@@ -1,4 +1,4 @@
-import { memo, useCallback, VFC } from "react";
+import { memo, VFC } from "react";
 import { SecondaryButton } from "../../atoms/buttons/SecondaryButton";
 import { AvatorSignInUser } from "./avatorSignInUser";
 import { userState } from "../../../store/userState";

@@ -1,8 +1,13 @@
-import { memo, VFC } from "react";
+import { memo, useRef, VFC } from "react";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../store/userState";
 import styled from "styled-components";
 import { Comments } from "../../types/responseType";
+import { Divider, Flex, useDisclosure } from "@chakra-ui/react";
+import { DeleteButton } from "../atoms/buttons/DeleteButton";
+import { useCommentHook } from "../../hooks/thread/commentHook";
+import { AlertDialogComp } from "./Alert/AlertDialog";
+import { AvatorOnComment } from "./Avator/avatorOnComment";
 
 type Props = {
   comment: Comments;
@@ -12,14 +17,47 @@ type Props = {
 // eslint-disable-next-line react/display-name
 export const CommentBox: VFC<Props> = memo((props) => {
   const { comment } = props;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
   const signInUser = useRecoilValue(userState);
+  const { commentLoading, commentDelete } = useCommentHook();
+
+  const deleteHook = () => {
+    commentDelete(comment.id);
+    onClose();
+  };
 
   return (
     <>
       {signInUser.id === comment.user.uid ? (
-        <MessageRight>{comment.text}</MessageRight>
+        <>
+          <Flex flexDirection="row" align="center">
+            <MessageRight>
+              {comment.text}
+              <Divider p={1} />
+              <DeleteButton onClick={onOpen} loading={commentLoading}>
+                削除
+              </DeleteButton>
+            </MessageRight>
+            <AvatorOnComment comment={comment} />
+          </Flex>
+          <AlertDialogComp
+            isOpen={isOpen}
+            onClose={onClose}
+            cancelRef={cancelRef}
+            deleteHook={deleteHook}
+            isLoading={commentLoading}
+          />
+        </>
       ) : (
-        <MessageLeft>{comment.text}</MessageLeft>
+        <Flex flexDirection="row">
+          <AvatorOnComment comment={comment} />
+          <MessageLeft>
+            {comment.text}
+            <Divider p={1} />
+          </MessageLeft>
+        </Flex>
       )}
     </>
   );
