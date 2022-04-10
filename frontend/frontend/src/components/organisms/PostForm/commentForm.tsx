@@ -3,19 +3,18 @@ import { useRouter } from "next/router";
 import { ChangeEvent, memo, useState, VFC } from "react";
 import { useRecoilValue } from "recoil";
 import { useCommentHook } from "../../../hooks/thread/commentHook";
-import { useThreadHook } from "../../../hooks/thread/threadHook";
 import { useMessage } from "../../../hooks/useMessage";
 import { threadState } from "../../../store/threadState";
 import { userState } from "../../../store/userState";
 import { SecondaryButton } from "../../atoms/buttons/SecondaryButton";
 
-type Props ={
-  parent_id: number
-}
+type Props = {
+  parent_id: number;
+};
 
 // eslint-disable-next-line react/display-name
 export const CommentForm: VFC<Props> = memo((prop) => {
-  const {parent_id} =prop;
+  const { parent_id } = prop;
   const router = useRouter();
   const [text, setText] = useState("");
   const signInUser = useRecoilValue(userState);
@@ -30,7 +29,7 @@ export const CommentForm: VFC<Props> = memo((prop) => {
 
   const onClick = () => {
     if (signInUser.id) {
-      commentPost(signInUser.id, thread.id, parent_id, text)
+      commentPost(signInUser.id, thread.id, parent_id, text);
     } else {
       showMessage({ title: "ログインして下さい。", status: "error" });
       router.push("/login");
