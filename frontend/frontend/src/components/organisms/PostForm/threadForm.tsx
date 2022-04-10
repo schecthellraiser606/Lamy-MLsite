@@ -34,7 +34,7 @@ export const ThreadForm: VFC = memo(() => {
   return (
     <>
       {signInUser.isSignedIn ? (
-        <Box bgColor="cyan.800" m={4} p={2} w="90%" borderRadius="7px">
+        <Box bgColor="cyan.700" m={4} p={2} w="90%" borderRadius="7px">
           <Heading p={2} fontFamily="Yuji Syuku">
             新規作成
           </Heading>
