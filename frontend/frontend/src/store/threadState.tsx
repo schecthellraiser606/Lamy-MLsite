@@ -23,5 +23,5 @@ export const threadState = atom<Thread>({
     created_thread_at: "",
     updated_thread_at: "",
   },
-  effects_UNSTABLE: [persistAtom],
+  // effects_UNSTABLE: [persistAtom],
 });

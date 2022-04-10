@@ -92,7 +92,7 @@ class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.select_related('user', 'threads').all()
   serializer_class = CommentsSerializer
   authentication_classes = (MyAuthentication,)
-  permission_classes = (IsAuthenticated, OwnObjectPermission,)
+  permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
   filter_backends = (DjangoFilterBackend,)
   filter_fields = ('threads',)
 

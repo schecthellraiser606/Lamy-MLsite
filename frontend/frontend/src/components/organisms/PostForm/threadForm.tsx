@@ -20,6 +20,8 @@ export const ThreadForm: VFC = memo(() => {
   const { threadLoading, threadPost } = useThreadHook();
   const { showMessage } = useMessage();
 
+  const isTitle = title.match(/[!-~]{1,30}/) ? false : true;
+
   const onClick = () => {
     if (signInUser.id) {
       threadPost(signInUser.id, title, text);
@@ -37,7 +39,7 @@ export const ThreadForm: VFC = memo(() => {
             新規作成
           </Heading>
           <Stack textAlign="center">
-            <FormControl>
+            <FormControl isInvalid={isTitle}>
               <FormLabel>タイトル</FormLabel>
               <Input value={title} onChange={onChangeTitle} borderColor="white" bgColor="gray.600" />
             </FormControl>
@@ -49,7 +51,7 @@ export const ThreadForm: VFC = memo(() => {
           <Divider p={1} />
           <Flex flexDirection="row" align="center" marginTop={3}>
             <Spacer />
-            <SecondaryButton onClick={onClick} loading={threadLoading}>
+            <SecondaryButton onClick={onClick} disable={isTitle} loading={threadLoading}>
               掲示板作成
             </SecondaryButton>
           </Flex>

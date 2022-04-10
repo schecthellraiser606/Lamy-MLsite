@@ -131,7 +131,7 @@ class Comments(models.Model):
   user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default='anonymous', related_name='user_comment')
   threads = models.ForeignKey(Threads, on_delete=models.CASCADE, related_name='comment_thread')
   parent_id = models.PositiveIntegerField(blank=True, null=True)
-  text = models.TextField(blank=True)
+  text = models.TextField(default='No Data')
   created_comment_at = models.DateTimeField(auto_now_add=True)
   updated_comment_at = models.DateTimeField(auto_now=True)
   
