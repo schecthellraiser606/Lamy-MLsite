@@ -83,6 +83,7 @@ export const DropZone: VFC = memo(() => {
           is_main: data.is_main,
           updated_image_at: data.updated_image_at,
           user: {
+            uid: data.user.uid,
             displayname: data.user.displayname,
             worship: data.user.worship,
             created_user_at: data.user.created_user_at,

@@ -17,7 +17,7 @@ hololist = [
 
 
 class UserSerializer(serializers.ModelSerializer):
-  uid = serializers.CharField(validators=[validators.UniqueValidator(queryset=User.objects.all(), message="Not Unique")] ,write_only = True)
+  uid = serializers.CharField(validators=[validators.UniqueValidator(queryset=User.objects.all(), message="Not Unique")])
   displayname = serializers.CharField(max_length=30)
   worship = serializers.ChoiceField(hololist)
   created_user_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
@@ -84,14 +84,14 @@ class ThreadSerializer(serializers.ModelSerializer):
 class CommentsSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   uid = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True, many=False)
-  thread = ThreadSerializer(read_only=True)
+  threads = ThreadSerializer(read_only=True)
   thread_id = serializers.PrimaryKeyRelatedField(queryset=Threads.objects.all(), write_only=True, many=False)
   created_comment_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   updated_comment_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
   
   class Meta:
     model = Comments
-    fields = ['id', 'user', 'uid', 'thread', 'parent_id', 'text', 'thread_id', 'created_comment_at', 'updated_comment_at']
+    fields = ['id', 'user', 'uid', 'threads', 'parent_id', 'text', 'thread_id', 'created_comment_at', 'updated_comment_at']
     
   def create(self, validated_data):
     validated_data['user'] = validated_data.get('uid', None)
@@ -99,12 +99,13 @@ class CommentsSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("user not found.") 
     del validated_data['uid']
     
-    validated_data['thread'] = validated_data.get('thread_id', None)
-    if validated_data['thread'] is None:
+    validated_data['threads'] = validated_data.get('thread_id', None)
+    if validated_data['threads'] is None:
             raise serializers.ValidationError("user not found.") 
-    del validated_data['thread']
+    del validated_data['thread_id']
     
     return Comments.objects.create(**validated_data) 
-  
+
+
 
   

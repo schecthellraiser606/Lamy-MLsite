@@ -1,11 +1,11 @@
 import { memo, VFC } from "react";
-import { Comment } from "../../test/comments";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../store/userState";
 import styled from "styled-components";
+import { Comments } from "../../types/responseType";
 
 type Props = {
-  comment: Comment;
+  comment: Comments;
   key: number;
 };
 

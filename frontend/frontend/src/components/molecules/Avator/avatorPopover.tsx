@@ -23,7 +23,6 @@ export const AvatorPopover: VFC = memo(() => {
   const router = useRouter();
   const signInUser = useRecoilValue(userState);
 
-
   const onClickLogin = () => {
     router.push("/login");
   };
@@ -35,7 +34,7 @@ export const AvatorPopover: VFC = memo(() => {
           aria-label="UserAvator"
           size="lg"
           variant="unstyled"
-          icon={signInUser.id ? <Avatar name={signInUser.name}/> : <Avatar />}
+          icon={signInUser.id ? <Avatar name={signInUser.name} /> : <Avatar />}
         />
       </PopoverTrigger>
       <Portal>

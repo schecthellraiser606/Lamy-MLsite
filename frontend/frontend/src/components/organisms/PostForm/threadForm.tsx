@@ -33,7 +33,9 @@ export const ThreadForm: VFC = memo(() => {
     <>
       {signInUser.isSignedIn ? (
         <Box bgColor="cyan.800" m={4} p={2} w="80%" borderRadius="7px">
-          <Heading p={2} fontFamily="Yuji Syuku">新規作成</Heading>
+          <Heading p={2} fontFamily="Yuji Syuku">
+            新規作成
+          </Heading>
           <Stack textAlign="center">
             <FormControl>
               <FormLabel>タイトル</FormLabel>

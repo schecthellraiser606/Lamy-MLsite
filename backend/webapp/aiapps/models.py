@@ -35,7 +35,7 @@ class User(AbstractUser):
     
 class UserToken(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'user_token')
-  token =models.CharField(max_length=64)
+  token =models.CharField(max_length=128)
   access_datetime = models.DateTimeField()
   
   def __str__(self):
@@ -49,7 +49,7 @@ class UserToken(models.Model):
        UserToken.objects.get(user=user).delete() #すでに存在した場合は削除
      dt = timezone.now()
      str = user.uid + user.worship + dt.strftime('%Y%m%d%H%M%S%f')
-     hash = hashlib.sha256(str.encode('utf-8')).hexdigest()
+     hash = hashlib.sha512(str.encode('utf-8')).hexdigest()
      token = UserToken.objects.create(
             user = user,
             token = hash,
@@ -65,7 +65,7 @@ class UserToken(models.Model):
           return None
         
   def check_valid_token(self):
-    delta = timedelta(minutes=40)
+    delta = timedelta(minutes=30)
     if(delta < timezone.now() - self.access_datetime):
       return False
     return True
