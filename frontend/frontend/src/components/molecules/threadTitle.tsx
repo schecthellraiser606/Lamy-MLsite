@@ -1,4 +1,4 @@
-import { Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { memo, VFC } from "react";
 import { useRecoilValue } from "recoil";
 import { threadState } from "../../store/threadState";
@@ -8,11 +8,11 @@ export const ThreadTitle: VFC = memo(() => {
   const thread = useRecoilValue(threadState);
 
   return (
-    <>
-      <Heading as="h1" fontFamily="Yuji Syuku" margin="30px" color="white">
+    <Box w="90%">
+      <Heading as="h1" fontFamily="Yuji Syuku" margin="30px" color="white" textAlign="center">
         {thread.title}
       </Heading>
-      <Text>{thread.text}</Text>
-    </>
+      <Text fontFamily="Yuji Syuku" flexWrap="wrap" textAlign="center">{thread.text}</Text>
+    </Box>
   );
 });

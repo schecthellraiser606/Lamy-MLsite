@@ -14,13 +14,14 @@ export const useCommentHook = () => {
   const router = useRouter();
 
   const commentPost = useCallback(
-    (uid: string, thread_id: number, parent_id: number | null, text: string) => {
+    (uid: string, thread_id: number, parent_id: number | null, parent_index: number | null, text: string) => {
       setCommentLoading(true);
       const url = "http://localhost:8000/aiapps/comment/";
       const data = {
         uid: uid,
         thread_id: thread_id,
         parent_id: parent_id,
+        parent_index: parent_index,
         text: text,
       };
       axios
@@ -53,6 +54,8 @@ export const useCommentHook = () => {
       setCommentLoading(true);
       const url = `http://localhost:8000/aiapps/comment/${comment_id}/`;
       const data = {
+        parent_id: null,
+        parent_index: null,
         text: "This Data was Deleted",
       };
       axios

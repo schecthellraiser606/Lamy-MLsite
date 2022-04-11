@@ -3,14 +3,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../store/userState";
 import styled from "styled-components";
 import { Comments } from "../../types/responseType";
-import { Flex, useDisclosure, Button, Stack, Spacer, Text } from "@chakra-ui/react";
+import { Flex, useDisclosure, Button, Stack, Spacer, Text, Divider } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
 import { DeleteButton } from "../atoms/buttons/DeleteButton";
 import { useCommentHook } from "../../hooks/thread/commentHook";
 import { AlertDialogComp } from "./Alert/AlertDialog";
 import { AvatorOnComment } from "./Avator/avatorOnComment";
-import AnchorLink from "react-anchor-link-smooth-scroll";
 import { parentCommentState } from "../../store/parentCommentState";
+import Link from "next/link";
 
 type Props = {
   comment: Comments;
@@ -34,7 +34,7 @@ export const CommentBox: VFC<Props> = memo((props) => {
   };
 
   const onClickRep = () => {
-    setParent({ id: comment.id });
+    setParent({ id: comment.id, index: index });
     const element = document.documentElement;
     const bottom = element.scrollHeight - element.clientHeight;
     window.scrollTo({
@@ -47,13 +47,15 @@ export const CommentBox: VFC<Props> = memo((props) => {
     <>
       {signInUser.id === comment.user.uid ? (
         <>
-          <Flex flexDirection="row-reverse" align="center" id={index.toString()}>
+          <Flex flexDirection="row-reverse" align="center" id={comment.id.toString()}>
             <AvatorOnComment comment={comment} />
             <MessageRight>
               <Stack>
+                <Text as="u">{index}　投稿目</Text>
+                <Divider />
                 {comment.parent_id ? (
                   <>
-                    <AnchorLink href={"#" + comment.parent_id.toString()}>{">>" + comment.parent_id}</AnchorLink>
+                    <Link href={"#" + comment.parent_id.toString()}><a>{">>" + comment.parent_index}</a></Link>
                     <br />
                   </>
                 ) : (
@@ -65,7 +67,7 @@ export const CommentBox: VFC<Props> = memo((props) => {
                   </Text>
                 ) : (
                   <>
-                    <Text color="black" fontFamily="Yuji Syuku">
+                    <Text color="black" fontFamily="Yuji Syuku" style={{whiteSpace: 'pre-line'}}>
                       {comment.text}
                     </Text>
                     <DeleteButton onClick={onOpen} loading={commentLoading}>
@@ -85,25 +87,27 @@ export const CommentBox: VFC<Props> = memo((props) => {
           />
         </>
       ) : (
-        <Flex flexDirection="row" id={index.toString()}>
+        <Flex flexDirection="row" id={comment.id.toString()}>
           <AvatorOnComment comment={comment} />
           <MessageLeft>
             <Stack>
+              <Text as="u">{index}　投稿目</Text>
+              <Divider />
               {comment.parent_id ? (
                 <>
-                  <AnchorLink href={"#" + comment.parent_id.toString()}>{">>" + comment.parent_id}</AnchorLink>
+                  <Link href={"#" + comment.parent_id.toString()}><a>{">>" + comment.parent_index}</a></Link>
                   <br />
                 </>
               ) : (
                 <></>
               )}
               {comment.text === "This Data was Deleted" ? (
-                <Text as="i" color="black" fontFamily="Yuji Syuku">
+                <Text as="i" color="black" fontFamily="Yuji Syuku" >
                   {comment.text}
                 </Text>
               ) : (
                 <>
-                  <Text color="black" fontFamily="Yuji Syuku">
+                  <Text color="black" fontFamily="Yuji Syuku" style={{whiteSpace: 'pre-line'}}>
                     {comment.text}
                   </Text>
                   <Flex flexDirection="row" align="center">
@@ -114,6 +118,7 @@ export const CommentBox: VFC<Props> = memo((props) => {
                       variant="outline"
                       onClick={onClickRep}
                       size="xs"
+                      marginBottom={1}
                     >
                       返信する
                     </Button>

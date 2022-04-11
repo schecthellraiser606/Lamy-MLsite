@@ -91,7 +91,7 @@ class CommentsSerializer(serializers.ModelSerializer):
   
   class Meta:
     model = Comments
-    fields = ['id', 'user', 'uid', 'threads', 'parent_id', 'text', 'thread_id', 'created_comment_at', 'updated_comment_at']
+    fields = ['id', 'user', 'uid', 'threads', 'parent_id', 'parent_index', 'text', 'thread_id', 'created_comment_at', 'updated_comment_at']
     
   def create(self, validated_data):
     validated_data['user'] = validated_data.get('uid', None)

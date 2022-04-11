@@ -22,6 +22,15 @@ export const MenuDrawer: VFC<Props> = memo((props) => {
   const onClickLogin = () => {
     router.push("/login");
   };
+
+  const onClickThread = () => {
+    router.push("/thread/thread_index");
+  };
+
+  const onClickRanking = () => {
+    router.push("/ranking");
+  };
+
   return (
     <Drawer placement="right" size="xs" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay>
@@ -38,17 +47,14 @@ export const MenuDrawer: VFC<Props> = memo((props) => {
                 <AvatorSignInUser uid={signInUser.id} />
               ) : (
                 <Stack>
-                  <SecondaryButton disable={false} loading={false} onClick={onClickLogin}>
-                    ログイン
-                  </SecondaryButton>
+                  <SecondaryButton onClick={onClickLogin}>ログイン</SecondaryButton>
                 </Stack>
               )}
               <Divider my={4} />
-              <Text fontSize="lg">掲示板</Text>
+              <Text fontSize="lg">その他</Text>
               <Stack>
-                <SecondaryButton disable={false} loading={false} onClick={onClickLogin}>
-                  掲示板へ
-                </SecondaryButton>
+                <SecondaryButton onClick={onClickThread}>掲示板へ</SecondaryButton>
+                <SecondaryButton onClick={onClickRanking}>ランキングへ</SecondaryButton>
               </Stack>
             </Stack>
           </DrawerBody>

@@ -64,6 +64,7 @@ export type Comments = {
     updated_thread_at: string;
   };
   parent_id: number | null;
+  parent_index: number | null;
   text: string;
   created_comment_at: string;
   updated_comment_at: string;

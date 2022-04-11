@@ -1,7 +1,19 @@
-import { Box, Divider, Flex, FormControl, FormLabel, Heading, Spacer, Stack, Text, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Spacer,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, memo, useState, VFC } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { useCommentHook } from "../../../hooks/thread/commentHook";
 import { useMessage } from "../../../hooks/useMessage";
 import { parentCommentState } from "../../../store/parentCommentState";
@@ -16,6 +28,7 @@ export const CommentForm: VFC = memo(() => {
   const signInUser = useRecoilValue(userState);
   const thread = useRecoilValue(threadState);
   const parent = useRecoilValue(parentCommentState);
+  const reflesh = useResetRecoilState(parentCommentState);
 
   const { commentLoading, commentPost } = useCommentHook();
   const { showMessage } = useMessage();
@@ -23,14 +36,16 @@ export const CommentForm: VFC = memo(() => {
   const onChangeText = (e: ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value);
   const isText = !text;
 
-  const onClick = () => {
+  const onClickPost = () => {
     if (signInUser.id) {
-      commentPost(signInUser.id, thread.id, parent.id, text);
+      commentPost(signInUser.id, thread.id, parent.id, parent.index, text);
     } else {
       showMessage({ title: "ログインして下さい。", status: "error" });
       router.push("/login");
     }
   };
+
+  const onClickReflesh = () => reflesh();
 
   return (
     <>
@@ -39,8 +54,15 @@ export const CommentForm: VFC = memo(() => {
           <Heading p={2} fontFamily="Yuji Syuku">
             コメント投稿
           </Heading>
+          <Divider />
           <Stack>
-            <Text>返信先:{parent.id ? parent.id : "なし"}</Text>
+            <Flex flexDirection="row" align="center">
+              <Text color="yellow.100">返信先:　{parent.index ? parent.index : "なし"}　投稿目</Text>
+              <Spacer />
+              <Button color="blue.400" onClick={onClickReflesh} _hover={{ opacity: 0.8 }} size="xs" marginTop={2}>
+                返信をやめる
+              </Button>
+            </Flex>
             <FormControl isInvalid={isText}>
               <FormLabel>内容:</FormLabel>
               <Textarea value={text} onChange={onChangeText} borderColor="white" bgColor="gray.600" />
@@ -49,7 +71,7 @@ export const CommentForm: VFC = memo(() => {
           <Divider />
           <Flex flexDirection="row" align="center" marginTop={3}>
             <Spacer />
-            <SecondaryButton onClick={onClick} disable={isText} loading={commentLoading}>
+            <SecondaryButton onClick={onClickPost} disable={isText} loading={commentLoading}>
               投稿する
             </SecondaryButton>
           </Flex>

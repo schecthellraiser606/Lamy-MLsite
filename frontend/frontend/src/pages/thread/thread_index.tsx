@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
 import axios from "axios";
-import Link from "next/link";
+import Snowfall from "react-snowfall";
 import { ThreadBox } from "../../components/molecules/ThreadBox";
 import { ThreadForm } from "../../components/organisms/PostForm/threadForm";
 import { Thread } from "../../types/responseType";
@@ -12,11 +12,12 @@ export interface Props {
 export default function ThreadIndex({ threads }: Props) {
   return (
     <Flex align="center" justify="center" flexDirection="column" w="100%" h="100vh">
+      <Snowfall />
       <Heading as="h1" fontFamily="Yuji Syuku" margin="30px">
         掲示板一覧
       </Heading>
       <ThreadForm />
-      <Box p={2} w="90%" h="100%" bg="cyan.700" m={4} borderRadius="7px" padding={5}>
+      <Box p={2} w="90%" bg="cyan.700" m={4} borderRadius="7px" padding={5} overflowY="auto">
         <Heading p={2} fontFamily="Yuji Syuku">
           一覧
         </Heading>

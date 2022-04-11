@@ -21,7 +21,7 @@ export const DeleteButton: VFC<Props> = memo((props) => {
         disabled={disable || loading}
         isLoading={loading}
         onClick={onClick}
-        marginTop={1}
+        marginBottom={1}
         size="xs"
       >
         {children}

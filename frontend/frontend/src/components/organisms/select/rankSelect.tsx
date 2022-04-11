@@ -60,7 +60,7 @@ export const RankSelect: VFC<Props> = memo((prop) => {
   const onChangeTime = (e: ChangeEvent<HTMLSelectElement>) => setTime(e.target.value);
 
   return (
-    <Box p={2} bg="gray.200" m={4} borderRadius="7px">
+    <Box p={2} bg="gray.200" m={4} borderRadius="7px" overflowY="auto">
       <ChakraProvider theme={themeSelect}>
         <Flex flexDirection="row" align="center" justifyContent="center">
           <Text
