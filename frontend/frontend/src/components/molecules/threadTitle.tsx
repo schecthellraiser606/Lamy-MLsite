@@ -12,7 +12,9 @@ export const ThreadTitle: VFC = memo(() => {
       <Heading as="h1" fontFamily="Yuji Syuku" margin="30px" color="white" textAlign="center">
         {thread.title}
       </Heading>
-      <Text fontFamily="Yuji Syuku" flexWrap="wrap" textAlign="center">{thread.text}</Text>
+      <Text fontFamily="Yuji Syuku" flexWrap="wrap" textAlign="center">
+        {thread.text}
+      </Text>
     </Box>
   );
 });

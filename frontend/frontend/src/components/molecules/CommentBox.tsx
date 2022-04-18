@@ -55,7 +55,9 @@ export const CommentBox: VFC<Props> = memo((props) => {
                 <Divider />
                 {comment.parent_id ? (
                   <>
-                    <Link href={"#" + comment.parent_id.toString()}><a>{">>" + comment.parent_index}</a></Link>
+                    <Link href={"#" + comment.parent_id.toString()}>
+                      <a>{">>" + comment.parent_index}</a>
+                    </Link>
                     <br />
                   </>
                 ) : (
@@ -67,7 +69,7 @@ export const CommentBox: VFC<Props> = memo((props) => {
                   </Text>
                 ) : (
                   <>
-                    <Text color="black" fontFamily="Yuji Syuku" style={{whiteSpace: 'pre-line'}}>
+                    <Text color="black" fontFamily="Yuji Syuku" style={{ whiteSpace: "pre-line" }}>
                       {comment.text}
                     </Text>
                     <DeleteButton onClick={onOpen} loading={commentLoading}>
@@ -95,19 +97,21 @@ export const CommentBox: VFC<Props> = memo((props) => {
               <Divider />
               {comment.parent_id ? (
                 <>
-                  <Link href={"#" + comment.parent_id.toString()}><a>{">>" + comment.parent_index}</a></Link>
+                  <Link href={"#" + comment.parent_id.toString()}>
+                    <a>{">>" + comment.parent_index}</a>
+                  </Link>
                   <br />
                 </>
               ) : (
                 <></>
               )}
               {comment.text === "This Data was Deleted" ? (
-                <Text as="i" color="black" fontFamily="Yuji Syuku" >
+                <Text as="i" color="black" fontFamily="Yuji Syuku">
                   {comment.text}
                 </Text>
               ) : (
                 <>
-                  <Text color="black" fontFamily="Yuji Syuku" style={{whiteSpace: 'pre-line'}}>
+                  <Text color="black" fontFamily="Yuji Syuku" style={{ whiteSpace: "pre-line" }}>
                     {comment.text}
                   </Text>
                   <Flex flexDirection="row" align="center">
