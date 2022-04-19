@@ -66,33 +66,33 @@ resource "aws_subnet" "private_subnet_1c_db" {
 }
 
 #route table
-resource "aws_route_table" "public_rt" {
+resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name    = "${var.project}-public-rt"
+    Name    = "${var.project}-private-rt"
     Project = var.project
-    Type    = "public"
+    Type    = "priavte"
   }
 }
 
-resource "aws_route_table_association" "public_rt_1a_app" {
-  route_table_id = aws_route_table.public_rt.id
+resource "aws_route_table_association" "private_rt_1a_app" {
+  route_table_id = aws_route_table.private_rt.id
   subnet_id      = aws_subnet.private_subnet_1a_app.id
 }
 
-resource "aws_route_table_association" "public_rt_1c_app" {
-  route_table_id = aws_route_table.public_rt.id
+resource "aws_route_table_association" "private_rt_1c_app" {
+  route_table_id = aws_route_table.private_rt.id
   subnet_id      = aws_subnet.private_subnet_1c_app.id
 }
 
 resource "aws_route_table_association" "private_rt_1a_db" {
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id = aws_route_table.private_rt.id
   subnet_id      = aws_subnet.private_subnet_1a_db.id
 }
 
 resource "aws_route_table_association" "private_rt_1c_db" {
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id = aws_route_table.private_rt.id
   subnet_id      = aws_subnet.private_subnet_1c_db.id
 }
 
@@ -105,8 +105,8 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_route" "public_rt_igw_r" {
-  route_table_id         = aws_route_table.public_rt.id
+resource "aws_route" "private_rt_igw_r" {
+  route_table_id         = aws_route_table.private_rt.id
   gateway_id             = aws_internet_gateway.igw.id
   destination_cidr_block = "0.0.0.0/0"
 }
