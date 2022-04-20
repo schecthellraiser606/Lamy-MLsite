@@ -47,7 +47,7 @@ resource "random_string" "db_password" {
 }
 
 resource "aws_db_instance" "mariadb_instance" {
-  engine = "mariadb"
+  engine         = "mariadb"
   engine_version = "10.6"
 
   identifier = "${var.project}-mariadb-instance"
@@ -55,22 +55,22 @@ resource "aws_db_instance" "mariadb_instance" {
   username = var.db_username
   password = random_string.db_password.result
 
-  instance_class = "db.t2.micro"
+  instance_class        = "db.t2.micro"
   allocated_storage     = 10
   max_allocated_storage = 50
-  storage_type = "gp2"
+  storage_type          = "gp2"
   storage_encrypted     = false
 
-  multi_az               = true
+  multi_az = true
 
-  db_subnet_group_name = aws_db_subnet_group.mariadb_subnetgroup.name
+  db_subnet_group_name   = aws_db_subnet_group.mariadb_subnetgroup.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   publicly_accessible    = false
-  port = 3306
+  port                   = 3306
 
-  name = var.db_name
+  name                 = var.db_name
   parameter_group_name = aws_db_parameter_group.mariadb_parametergroup.name
-  option_group_name = aws_db_option_group.mariadb_optiongroup.name
+  option_group_name    = aws_db_option_group.mariadb_optiongroup.name
 
   backup_window              = "02:00-03:00"
   backup_retention_period    = 7
