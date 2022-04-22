@@ -84,4 +84,15 @@ resource "aws_ecs_service" "ecs_service" {
     ]
     assign_public_ip = false
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.alb_target_group_front.arn
+    container_name   = "frontend"
+    container_port   = 3000
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.alb_target_group_backend.id
+    container_name   = "webapp"
+    container_port   = 8000
+  }
 }

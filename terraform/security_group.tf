@@ -29,6 +29,15 @@ resource "aws_security_group_rule" "web_in_https" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "web_in_tcp8000" {
+  security_group_id = aws_security_group.web_sg.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8000
+  to_port           = 8000
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "web_out_tcp3000" {
   security_group_id        = aws_security_group.web_sg.id
   type                     = "egress"

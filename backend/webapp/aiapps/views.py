@@ -79,8 +79,8 @@ class ThreadGetViewSet(generics.ListAPIView):
 class ManageThreadView(viewsets.ModelViewSet):
   queryset = Threads.objects.select_related('user').all()
   serializer_class = ThreadSerializer
-  # authentication_classes = (MyAuthentication,)
-  # permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
+  authentication_classes = (MyAuthentication,)
+  permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
   
 class CommentGetView(generics.ListAPIView):
   queryset = Comments.objects.select_related('user', 'threads').order_by('created_comment_at')
@@ -91,8 +91,8 @@ class CommentGetView(generics.ListAPIView):
 class ManageCommentViewSet(viewsets.ModelViewSet):
   queryset = Comments.objects.select_related('user', 'threads').all()
   serializer_class = CommentsSerializer
-  # authentication_classes = (MyAuthentication,)
-  # permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
+  authentication_classes = (MyAuthentication,)
+  permission_classes = (IsAuthenticated, OwnObjectPermission, NoDeletePermission,)
   filter_backends = (DjangoFilterBackend,)
   filter_fields = ('threads',)
 
