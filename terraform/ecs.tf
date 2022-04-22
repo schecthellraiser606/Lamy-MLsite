@@ -1,20 +1,16 @@
+#cluster
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.project}-myapp-cluster"
 }
 
-data "aws_iam_policy_document" "assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
+#IAMrole
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name               = "${var.project}-myEcsTask-exe-Role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.project}-myEcsTaskRole"
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "${var.project}-myEcsTask-Role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -23,6 +19,17 @@ resource "aws_iam_role_policy_attachment" "amazon_ecs_task_execution_role_policy
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ssm-read-policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "task_s3" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+#Fargate-TASK
 resource "aws_ecs_task_definition" "ecs_task_def" {
   family                   = "${var.project}-myapp-task-def"
   network_mode             = "awsvpc"
@@ -30,6 +37,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
   cpu                      = 256
   memory                   = 1024
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -57,7 +65,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
   ])
 }
 
-
+#ECS-Service
 resource "aws_ecs_service" "ecs_service" {
   name            = "${var.project}-myapp-ecs-serice"
   cluster         = aws_ecs_cluster.ecs_cluster.arn
