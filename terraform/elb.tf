@@ -16,8 +16,6 @@ resource "aws_lb" "alb" {
     prefix  = "access_log"
     enabled = true
   }
-
-
 }
 
 #target group
@@ -65,23 +63,23 @@ resource "aws_lb_target_group" "alb_target_group_backend" {
 }
 
 resource "aws_alb_listener" "alb-listener-front" {
-  load_balancer_arn = aws_alb.alb.arn
+  load_balancer_arn = aws_lb.alb.arn
   port              = 80
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.alb_target_group_front.arn
+    target_group_arn = aws_lb_target_group.alb_target_group_front.arn
     type             = "forward"
   }
 }
 
 resource "aws_alb_listener" "alb-listener-api" {
-  load_balancer_arn = aws_alb.alb.arn
+  load_balancer_arn = aws_lb.alb.arn
   port              = 8000
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.alb_target_group_backend.arn
+    target_group_arn = aws_lb_target_group.alb_target_group_backend.arn
     type             = "forward"
   }
 }

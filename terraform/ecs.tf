@@ -66,7 +66,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
 }
 
 #ECS-Service
-resource "aws_ecs_service" "ecs_service" {
+resource "aws_ecs_service" "ecs_fargate_service" {
   name            = "${var.project}-myapp-ecs-serice"
   cluster         = aws_ecs_cluster.ecs_cluster.arn
   task_definition = aws_ecs_task_definition.ecs_task_def.arn
@@ -94,5 +94,13 @@ resource "aws_ecs_service" "ecs_service" {
     target_group_arn = aws_lb_target_group.alb_target_group_backend.id
     container_name   = "webapp"
     container_port   = 8000
+  }
+
+  lifecycle {
+    ignore_changes = [
+      desired_count,
+      task_definition,
+      load_balancer,
+    ]
   }
 }
