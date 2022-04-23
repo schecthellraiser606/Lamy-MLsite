@@ -98,16 +98,16 @@ resource "aws_s3_bucket_versioning" "versioning_image_learn" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "s3_image_learn_bucket" {
-  bucket                  = aws_s3_bucket.s3_image_learn_bucket.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-  depends_on = [
-    aws_s3_bucket_policy.s3_image_learn_bucket
-  ]
-}
+# resource "aws_s3_bucket_public_access_block" "s3_image_learn_bucket" {
+#   bucket                  = aws_s3_bucket.s3_image_learn_bucket.id
+#   block_public_acls       = true
+#   block_public_policy     = true
+#   ignore_public_acls      = true
+#   restrict_public_buckets = false
+#   depends_on = [
+#     aws_s3_bucket_policy.s3_image_learn_bucket
+#   ]
+# }
 
 resource "aws_s3_bucket_policy" "s3_image_learn_bucket" {
   bucket = aws_s3_bucket.s3_image_learn_bucket.id

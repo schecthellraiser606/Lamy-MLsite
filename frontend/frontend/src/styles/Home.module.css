@@ -1,6 +1,6 @@
 .container {
   padding: 0 2rem;
-  background-image: url("../image/lamytop.png");
+  background-image: url("https://lamyai-image-static-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com/image/lamytop.png");
   background-position: bottom center;
   background-size: contain;
   background-repeat: no-repeat;

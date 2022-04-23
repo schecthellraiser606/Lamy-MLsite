@@ -56,13 +56,7 @@ function comment(className: string) {
   return texts;
 }
 
-export function getmyImageValue(filepath: string): string | undefined {
-  if (process.env.NODE_ENV === "production") {
-    return require(`../../image/result/${filepath}.png`);
-  } else {
-    return require(`../../image/result/${filepath}.png`);
-  }
-}
+
 // eslint-disable-next-line react/display-name
 export const ResultComment: VFC = memo(() => {
   const { imageLoading, profileImageSet } = useImageHook();
@@ -82,8 +76,10 @@ export const ResultComment: VFC = memo(() => {
       <Heading fontFamily="Yuji Syuku" margin="auto" color="aquamarine" p={5} textAlign="center">
         {myImageValue.class_name}
       </Heading>
-      {/* @ts-ignore */}
-      <Image src={getmyImageValue(myImageValue.class_name)} alt={myImageValue.class_name} />
+      <Image
+        src={`https://lamyai-image-static-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com/image/result/${myImageValue.class_name}.png`}
+        alt={myImageValue.class_name}
+      />
       <Text fontSize="lg" p={5} color="white">
         {comment(myImageValue.class_name)}
       </Text>

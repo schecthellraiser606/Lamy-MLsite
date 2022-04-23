@@ -43,8 +43,21 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
     {
       "name" : "webapp"
       "image" : "${aws_ecr_repository.ecr_backend_app.repository_url}:latest"
-      "memory" : 768
+      "memory" : 512
       "essential" : true,
+      "environment" : [
+        {
+          "DB_NAME" : "${var.db_name}",
+          "DB_HOST" : "${aws_db_instance.mariadb_instance.address}",
+          "DB_USER" : "${var.db_username}",
+          "DB_PASSWORD" : "${random_string.db_password.result}",
+          "DB_PORT" : 3306,
+          "AWS_ACCESS_KEY_ID": "${var.aws_access_key_id}",
+          "AWS_SECRET_ACCESS_KEY": "${var.aws_secret_access_key}"
+          "AWS_STORAGE_BUCKET_NAME": "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}"
+          "CHOKIDAR_USEPOLLING" : true
+        }
+      ],
       portMappings = [
         {
           containerPort = 8000
@@ -54,7 +67,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
     {
       "name" : "frontend"
       "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest"
-      "memory" : 256
+      "memory" : 512
       "essential" : true,
       portMappings = [
         {

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-91cq5gwdaf9&jzzfmmk@^gs#cmgs_xyj)yr9&i9^h4ei(&1sq!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
-    
+    'storages',
 ]
 
 REST_FRAMEWORK = {
@@ -154,6 +154,20 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'test_images')
-MEDIA_URL = '/test_images/'
+#Media URL
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'test_images')
+# MEDIA_URL = '/test_images/'
+
+
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+S3_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
+MEDIA_URL = S3_URL
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+#default User
 AUTH_USER_MODEL = 'aiapps.User'

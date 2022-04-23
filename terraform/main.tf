@@ -13,20 +13,3 @@ provider "aws" {
   profile = var.username
   region  = "ap-northeast-1"
 }
-
-#variables
-variable "project" {
-  type = string
-}
-
-variable "username" {
-  type = string
-}
-
-variable "db_username" {
-  type = string
-}
-
-variable "db_name" {
-  type = string
-}

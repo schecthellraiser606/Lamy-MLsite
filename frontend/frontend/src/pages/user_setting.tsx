@@ -4,14 +4,6 @@ import { useState } from "react";
 import Snowfall from "react-snowfall";
 import { MyUserCreateButton } from "../components/molecules/login/myUserCreateButton";
 
-export function getImageSrc(filepath: string): string | undefined {
-  if (process.env.NODE_ENV === "production") {
-    return require(`../image/radio/${filepath}.png`);
-  } else {
-    return require(`../image/radio/${filepath}.png`);
-  }
-}
-
 export default function UserSetting() {
   const wlists = [
     "雪花ラミィ",
@@ -55,7 +47,12 @@ export default function UserSetting() {
         </Stack>
         <Box maxHeight={1500}>
           {/* @ts-ignore */}
-          <Image width={850} height={1200} src={getImageSrc(value)} alt="holoimage" />
+          <Image
+            width={850}
+            height={1200}
+            src={`https://lamyai-image-static-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com/image/radio/${value}.png`}
+            alt="holoimage"
+          />
         </Box>
       </Flex>
     </>
