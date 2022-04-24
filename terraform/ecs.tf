@@ -52,9 +52,9 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
           "DB_USER" : "${var.db_username}",
           "DB_PASSWORD" : "${random_string.db_password.result}",
           "DB_PORT" : 3306,
-          "AWS_ACCESS_KEY_ID": "${var.aws_access_key_id}",
-          "AWS_SECRET_ACCESS_KEY": "${var.aws_secret_access_key}"
-          "AWS_STORAGE_BUCKET_NAME": "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}"
+          "AWS_ACCESS_KEY_ID" : "${var.aws_access_key_id}",
+          "AWS_SECRET_ACCESS_KEY" : "${var.aws_secret_access_key}"
+          "AWS_STORAGE_BUCKET_NAME" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}"
           "CHOKIDAR_USEPOLLING" : true
         }
       ],

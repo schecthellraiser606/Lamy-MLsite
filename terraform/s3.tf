@@ -17,20 +17,20 @@ resource "aws_s3_bucket" "s3_image_static_bucket" {
   }
 }
 
-resource "aws_s3_bucket_acl" "s3_image_static_bucket" {
-  bucket = aws_s3_bucket.s3_image_static_bucket.id
-  acl    = "public-read"
-}
-resource "aws_s3_bucket_cors_configuration" "s3_image_static_bucket" {
-  bucket = aws_s3_bucket.s3_image_static_bucket.id
+# resource "aws_s3_bucket_acl" "s3_image_static_bucket" {
+#   bucket = aws_s3_bucket.s3_image_static_bucket.id
+#   acl    = "public-read"
+# }
+# resource "aws_s3_bucket_cors_configuration" "s3_image_static_bucket" {
+#   bucket = aws_s3_bucket.s3_image_static_bucket.id
 
-  cors_rule {
-    allowed_origins = ["*"]
-    allowed_methods = ["GET"]
-    allowed_headers = ["*"]
-    max_age_seconds = 3000
-  }
-}
+#   cors_rule {
+#     allowed_origins = ["*"]
+#     allowed_methods = ["GET"]
+#     allowed_headers = ["*"]
+#     max_age_seconds = 3000
+#   }
+# }
 
 resource "aws_s3_bucket_versioning" "versioning_image_static" {
   bucket = aws_s3_bucket.s3_image_static_bucket.id
