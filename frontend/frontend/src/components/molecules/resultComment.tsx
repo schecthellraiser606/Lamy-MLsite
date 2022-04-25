@@ -77,7 +77,7 @@ export const ResultComment: VFC = memo(() => {
         {myImageValue.class_name}
       </Heading>
       <Image
-        src={`https://lamyai-image-static-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com/image/result/${myImageValue.class_name}.png`}
+        src={`https://${process.env.NEXT_PUBLIC_S3_STATIC_URL}/image/result/${myImageValue.class_name}.png`}
         alt={myImageValue.class_name}
       />
       <Text fontSize="lg" p={5} color="white">

@@ -1,6 +1,5 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
 import { LoginForm } from "../components/molecules/login/loginForm";
-import { PublicRoute } from "../components/route/PublicRoute";
 import Snowfall from "react-snowfall";
 
 // eslint-disable-next-line react/display-name

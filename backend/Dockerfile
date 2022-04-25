@@ -9,6 +9,8 @@ WORKDIR /code
 ADD requirements.txt /code/
 
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt 
+    pip install -r requirements.txt
+
+COPY ./webapp /code/
 
 EXPOSE 8000

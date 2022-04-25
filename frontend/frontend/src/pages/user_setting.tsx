@@ -50,7 +50,7 @@ export default function UserSetting() {
           <Image
             width={850}
             height={1200}
-            src={`https://lamyai-image-static-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com/image/radio/${value}.png`}
+            src={`https://${process.env.NEXT_PUBLIC_S3_STATIC_URL}/image/radio/${value}.png`}
             alt="holoimage"
           />
         </Box>

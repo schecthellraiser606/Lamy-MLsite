@@ -35,7 +35,7 @@ export default function ThreadDetail({ comments }: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const param = context.params;
-  const url = `http://webapp:8000/aiapps/comment_all/?threads=${param?.id}`;
+  const url = `http://${process.env.INTERNAL_URL}:8000/aiapps/comment_all/?threads=${param?.id}`;
   const res = await axios.get<Array<Comments>>(url);
   const comments = res.data;
 

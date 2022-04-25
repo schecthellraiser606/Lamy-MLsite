@@ -4,9 +4,9 @@ const nextConfig = {
   swcMinify: false,
   images: {
     domains: [
-      "webapp", 
-      "lamyai-image-static-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com",
-      "lamyai-image-learn-bucket-fqkmr5.s3.ap-northeast-1.amazonaws.com",
+      process.env.INTERNAL_URL, 
+      process.env.NEXT_PUBLIC_S3_STATIC_URL,
+      process.env.NEXT_PUBLIC_S3_LEARN_URL,
     ],
   },
 };

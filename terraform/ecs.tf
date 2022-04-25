@@ -53,8 +53,10 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
           "DB_PASSWORD" : "${random_string.db_password.result}",
           "DB_PORT" : 3306,
           "AWS_ACCESS_KEY_ID" : "${var.aws_access_key_id}",
-          "AWS_SECRET_ACCESS_KEY" : "${var.aws_secret_access_key}"
-          "AWS_STORAGE_BUCKET_NAME" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}"
+          "AWS_SECRET_ACCESS_KEY" : "${var.aws_secret_access_key}",
+          "AWS_STORAGE_BUCKET_NAME" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}",
+          "MYAPP_DOMAIN": "${var.route53_domain}",
+          "DEBUG": false,
           "CHOKIDAR_USEPOLLING" : true
         }
       ],
@@ -69,6 +71,14 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
       "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest"
       "memory" : 512
       "essential" : true,
+      "environment" : [
+        {
+          "NEXT_PUBLIC_URL": "${var.route53_domain}",
+          "INTERNAL_URL": "localhost",
+          "NEXT_PUBLIC_S3_STATIC_URL": "${aws_s3_bucket.s3_image_static_bucket.bucket_domain_name}",
+          "NEXT_PUBLIC_S3_LEARN_URL": "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}"
+        }
+      ],
       portMappings = [
         {
           containerPort = 3000

@@ -32,7 +32,7 @@ export default function ThreadIndex({ threads }: Props) {
 }
 
 export async function getStaticProps() {
-  const url = "http://webapp:8000/aiapps/thread_index/?ordering=-updated_thread_at";
+  const url = `http://${process.env.INTERNAL_URL}:8000/aiapps/thread_index/?ordering=-updated_thread_at`;
   const res = await axios.get<Array<Thread>>(url);
   const threads = res.data;
 

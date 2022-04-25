@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import requests
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +25,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-91cq5gwdaf9&jzzfmmk@^gs#cmgs_xyj)yr9&i9^h4ei(&1sq!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ['DEBUG']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
+MYAPP_DOMAIN = os.environ['MYAPP_DOMAIN']
+
+def get_fargate_private_address():
+    try:
+        resp = requests.get('http://169.254.170.2/v2/metadata', timeout=(6.0, 7.5))
+        data = resp.json()
+        container_meta = data['Containers'][0]
+        FARGATE_PRIVARE = container_meta['Networks'][0]['IPv4Addresses'][0]
+        return FARGATE_PRIVARE
+    except requests.exceptions.RequestException:
+        print('ALLOWED HOSTSの取得に失敗')
+        raise ValueError
+    
+if not DEBUG:
+    FARGATE_PRIVARE = get_fargate_private_address()
+    ALLOWED_HOSTS.append(FARGATE_PRIVARE)
+    ALLOWED_HOSTS.append(MYAPP_DOMAIN)
+else:
+    ALLOWED_HOSTS.append("*")
 
 
 # Application definition
@@ -64,6 +84,9 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST =[
     'http://localhost:3000',
 ]
+
+if not DEBUG:
+    CORS_ORIGIN_WHITELIST.append("http://" + MYAPP_DOMAIN + ":3000")
 
 ROOT_URLCONF = 'webapp.urls'
 
@@ -155,19 +178,20 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Media URL
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'test_images')
-# MEDIA_URL = '/test_images/'
 
+if DEBUG:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'test_images')
+    MEDIA_URL = '/test_images/'
+else:
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-S3_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
-MEDIA_URL = S3_URL
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    S3_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
+    MEDIA_URL = S3_URL
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
 
 #default User
 AUTH_USER_MODEL = 'aiapps.User'
