@@ -56,7 +56,6 @@ function comment(className: string) {
   return texts;
 }
 
-
 // eslint-disable-next-line react/display-name
 export const ResultComment: VFC = memo(() => {
   const { imageLoading, profileImageSet } = useImageHook();

@@ -1,7 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
-const url = "<https://example.com>";
+const url = `https://${process.env.NEXT_PUBLIC_S3_STATIC_URL}/image/favicon.ico`;
 const title = "俺が本物のラミィだ";
 const description = "我こそはホロライブ所属の雪花ラミィと云う者、ここに集まれり";
 

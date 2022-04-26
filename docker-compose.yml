@@ -7,7 +7,7 @@ services:
       - ./backend/webapp:/code/
     stdin_open: true
     tty: true
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ./startup.sh
     ports:
       - "8000:8000"
     networks:
@@ -23,7 +23,6 @@ services:
       AWS_SECRET_ACCESS_KEY: ""
       AWS_STORAGE_BUCKET_NAME: ""
       MYAPP_DOMAIN: ""
-      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
     depends_on:
       - testdb
 
@@ -39,7 +38,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       TZ: 'Asia/Tokyo'
     volumes:
-      - ./mariadb_volume:/var/lib/mysql
+      - ./mariadb_volumes:/var/lib/mysql
     networks:
       - backendNetwork
       
@@ -49,9 +48,17 @@ services:
     volumes:
       - ./frontend/frontend:/home/app/frontend/
     tty: true
+    command: ./startup.sh
     ports:
       - 3000:3000
     environment:
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID}
+      NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID}
       NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
       INTERNAL_URL: ${INTERNAL_URL}
       NEXT_PUBLIC_S3_STATIC_URL: ${NEXT_PUBLIC_S3_STATIC_URL}
@@ -60,6 +67,7 @@ services:
       - backendNetwork
     depends_on:
       - testdb
+      - webapp
 
 networks:
   backendNetwork:

@@ -73,7 +73,7 @@ resource "aws_alb_listener" "alb_listener_http" {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
-    }            
+    }
   }
 }
 

@@ -26,3 +26,25 @@ variable "aws_secret_access_key" {
 variable "route53_domain" {
   type = string
 }
+
+variable "firebase_api_key" {
+  type = string
+}
+variable "firebase_auth_domain" {
+  type = string
+}
+variable "firebase_project_id" {
+  type = string
+}
+variable "firebase_storage_bucket" {
+  type = string
+}
+variable "firebase_messaging_sender_id" {
+  type = number
+}
+variable "firebase_app_id" {
+  type = string
+}
+variable "firebase_measurement_id" {
+  type = string
+}

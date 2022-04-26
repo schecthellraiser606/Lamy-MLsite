@@ -45,6 +45,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
       "image" : "${aws_ecr_repository.ecr_backend_app.repository_url}:latest"
       "memory" : 512
       "essential" : true,
+      "command" : ["./startup.sh"],
       "environment" : [
         {
           "DB_NAME" : "${var.db_name}",
@@ -55,9 +56,8 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
           "AWS_ACCESS_KEY_ID" : "${var.aws_access_key_id}",
           "AWS_SECRET_ACCESS_KEY" : "${var.aws_secret_access_key}",
           "AWS_STORAGE_BUCKET_NAME" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}",
-          "MYAPP_DOMAIN": "${var.route53_domain}",
-          "DEBUG": false,
-          "CHOKIDAR_USEPOLLING" : true
+          "MYAPP_DOMAIN" : "${var.route53_domain}",
+          "DEBUG" : false
         }
       ],
       portMappings = [
@@ -71,17 +71,31 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
       "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest"
       "memory" : 512
       "essential" : true,
+      "command" : ["./startup.sh"],
       "environment" : [
         {
-          "NEXT_PUBLIC_URL": "${var.route53_domain}",
-          "INTERNAL_URL": "localhost",
-          "NEXT_PUBLIC_S3_STATIC_URL": "${aws_s3_bucket.s3_image_static_bucket.bucket_domain_name}",
-          "NEXT_PUBLIC_S3_LEARN_URL": "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}"
+          "NEXT_PUBLIC_FIREBASE_API_KEY" : "${var.firebase_api_key}",
+          "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN" : "${var.firebase_auth_domain}",
+          "NEXT_PUBLIC_FIREBASE_PROJECT_ID" : "${var.firebase_project_id}",
+          "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET" : "${var.firebase_storage_bucket}",
+          "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" : "${var.firebase_messaging_sender_id}",
+          "NEXT_PUBLIC_FIREBASE_APP_ID" : "${var.firebase_app_id}",
+          "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID" : "${var.firebase_measurement_id}",
+          "NEXT_PUBLIC_URL" : "${var.route53_domain}",
+          "INTERNAL_URL" : "localhost",
+          "NEXT_PUBLIC_S3_STATIC_URL" : "${aws_s3_bucket.s3_image_static_bucket.bucket_regional_domain_name}",
+          "NEXT_PUBLIC_S3_LEARN_URL" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_regional_domain_name}"
         }
       ],
       portMappings = [
         {
           containerPort = 3000
+        }
+      ],
+      "dependsOn" : [
+        {
+          "containerName" : "webapp"
+          "condition" : "HEALTHY"
         }
       ]
     }

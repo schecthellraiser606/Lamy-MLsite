@@ -62,8 +62,8 @@ resource "aws_db_instance" "mariadb_instance" {
   storage_type          = "gp2"
   storage_encrypted     = false
 
-  multi_az = false
-  availability_zone      = "ap-northeast-1a"
+  multi_az          = false
+  availability_zone = "ap-northeast-1a"
 
   db_subnet_group_name   = aws_db_subnet_group.mariadb_subnetgroup.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
