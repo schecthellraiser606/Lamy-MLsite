@@ -17,7 +17,7 @@ export const useImageHook = () => {
 
   const profileImageSet = useCallback(() => {
     setImageLoading(true);
-    const url = `http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/image/${myImageValue.id}/`;
+    const url = `http://${process.env.NEXT_PUBLIC_URL}/aiapps/image/${myImageValue.id}/`;
     const data = {
       is_main: true,
     };
@@ -57,7 +57,7 @@ export const useImageHook = () => {
 
   const profileImageGet = useCallback(() => {
     setImageLoading(true);
-    const url = `http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/image/`;
+    const url = `http://${process.env.NEXT_PUBLIC_URL}/aiapps/image/`;
     axios
       .get<Array<LearningImagee>>(url, {
         headers: {

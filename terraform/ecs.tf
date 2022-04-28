@@ -34,81 +34,102 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
   family                   = "${var.project}-myapp-task-def"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = 256
-  memory                   = 1024
+  cpu                      = 1024
+  memory                   = 2048
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
-      "name" : "webapp"
-      "image" : "${aws_ecr_repository.ecr_backend_app.repository_url}:latest"
-      "memory" : 512
+      "name" : "webapp",
+      "image" : "${aws_ecr_repository.ecr_backend_app.repository_url}:latest",
+      "cpu" : 512,
+      "memory" : 1024,
       "essential" : true,
       "command" : ["./startup.sh"],
       "environment" : [
+        { "name" : "DB_NAME", "value" : "${var.db_name}" },
+        { "name" : "DB_HOST", "value" : "${aws_db_instance.mariadb_instance.address}" },
+        { "name" : "DB_USER", "value" : "${var.db_username}" },
+        { "name" : "DB_PASSWORD", "value" : "${random_string.db_password.result}" },
+        { "name" : "DB_PORT", "value" : "3306" },
+        { "name" : "AWS_ACCESS_KEY_ID", "value" : "${var.aws_access_key_id}" },
+        { "name" : "AWS_SECRET_ACCESS_KEY", "value" : "${var.aws_secret_access_key}" },
+        { "name" : "AWS_STORAGE_BUCKET_NAME", "value" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}" },
+        { "name" : "MYAPP_DOMAIN", "value" : "${var.route53_domain}" },
+        { "name" : "DEBUG", "value" : "false" },
+      ],
+      "portMappings" : [
         {
-          "DB_NAME" : "${var.db_name}",
-          "DB_HOST" : "${aws_db_instance.mariadb_instance.address}",
-          "DB_USER" : "${var.db_username}",
-          "DB_PASSWORD" : "${random_string.db_password.result}",
-          "DB_PORT" : 3306,
-          "AWS_ACCESS_KEY_ID" : "${var.aws_access_key_id}",
-          "AWS_SECRET_ACCESS_KEY" : "${var.aws_secret_access_key}",
-          "AWS_STORAGE_BUCKET_NAME" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}",
-          "MYAPP_DOMAIN" : "${var.route53_domain}",
-          "DEBUG" : false
+          "containerPort" : 8000
         }
       ],
-      portMappings = [
-        {
-          containerPort = 8000
+      "healthCheck" : {
+        "command" : [
+          "CMD-SHELL",
+          "curl -f http://localhost:8000/aiapps/ || exit 1"
+        ],
+      },
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-region" : "ap-northeast-1",
+          "awslogs-group" : "${aws_cloudwatch_log_group.fargate_cluster_log_group.name}",
+          "awslogs-stream-prefix" : "webapp-container-log-stream"
         }
-      ]
+      }
     },
     {
-      "name" : "frontend"
-      "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest"
-      "memory" : 512
+      "name" : "frontend",
+      "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest",
+      "cpu" : 512,
+      "memory" : 1024,
       "essential" : true,
       "command" : ["./startup.sh"],
       "environment" : [
-        {
-          "NEXT_PUBLIC_FIREBASE_API_KEY" : "${var.firebase_api_key}",
-          "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN" : "${var.firebase_auth_domain}",
-          "NEXT_PUBLIC_FIREBASE_PROJECT_ID" : "${var.firebase_project_id}",
-          "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET" : "${var.firebase_storage_bucket}",
-          "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" : "${var.firebase_messaging_sender_id}",
-          "NEXT_PUBLIC_FIREBASE_APP_ID" : "${var.firebase_app_id}",
-          "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID" : "${var.firebase_measurement_id}",
-          "NEXT_PUBLIC_URL" : "${var.route53_domain}",
-          "INTERNAL_URL" : "localhost",
-          "NEXT_PUBLIC_S3_STATIC_URL" : "${aws_s3_bucket.s3_image_static_bucket.bucket_regional_domain_name}",
-          "NEXT_PUBLIC_S3_LEARN_URL" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_regional_domain_name}"
-        }
+        { "name" : "NEXT_PUBLIC_FIREBASE_API_KEY", "value" : "${var.firebase_api_key}" },
+        { "name" : "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN", "value" : "${var.firebase_auth_domain}" },
+        { "name" : "NEXT_PUBLIC_FIREBASE_PROJECT_ID", "value" : "${var.firebase_project_id}" },
+        { "name" : "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET", "value" : "${var.firebase_storage_bucket}" },
+        { "name" : "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID", "value" : "${var.firebase_messaging_sender_id}" },
+        { "name" : "NEXT_PUBLIC_FIREBASE_APP_ID", "value" : "${var.firebase_app_id}" },
+        { "name" : "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID", "value" : "${var.firebase_measurement_id}" },
+        { "name" : "NEXT_PUBLIC_URL", "value" : "${var.route53_domain}" },
+        { "name" : "INTERNAL_URL", "value" : "localhost" },
+        { "name" : "NEXT_PUBLIC_S3_STATIC_URL", "value" : "${aws_s3_bucket.s3_image_static_bucket.bucket_regional_domain_name}" },
+        { "name" : "NEXT_PUBLIC_S3_LEARN_URL", "value" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_regional_domain_name}" },
       ],
-      portMappings = [
+      "portMappings" : [
         {
-          containerPort = 3000
+          "containerPort" : 3000
         }
       ],
       "dependsOn" : [
         {
-          "containerName" : "webapp"
+          "containerName" : "webapp",
           "condition" : "HEALTHY"
         }
-      ]
+      ],
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-region" : "ap-northeast-1",
+          "awslogs-group" : "${aws_cloudwatch_log_group.fargate_cluster_log_group.name}",
+          "awslogs-stream-prefix" : "frontend-container-log-stream"
+        }
+      }
     }
   ])
 }
 
 #ECS-Service
 resource "aws_ecs_service" "ecs_fargate_service" {
-  name            = "${var.project}-myapp-ecs-serice"
-  cluster         = aws_ecs_cluster.ecs_cluster.arn
-  task_definition = aws_ecs_task_definition.ecs_task_def.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name                 = "${var.project}-myapp-ecs-serice"
+  cluster              = aws_ecs_cluster.ecs_cluster.arn
+  task_definition      = aws_ecs_task_definition.ecs_task_def.arn
+  desired_count        = 1
+  launch_type          = "FARGATE"
+  force_new_deployment = true
 
   deployment_minimum_healthy_percent = 50
   health_check_grace_period_seconds  = 60
@@ -116,10 +137,10 @@ resource "aws_ecs_service" "ecs_fargate_service" {
   network_configuration {
     security_groups = [aws_security_group.app_sg.id]
     subnets = [
-      aws_subnet.private_subnet_1a_app.id,
-      aws_subnet.private_subnet_1c_app.id,
+      aws_subnet.public_subnet_1a_app.id,
+      aws_subnet.public_subnet_1c_app.id,
     ]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   load_balancer {
@@ -136,7 +157,6 @@ resource "aws_ecs_service" "ecs_fargate_service" {
   lifecycle {
     ignore_changes = [
       desired_count,
-      task_definition,
       load_balancer,
     ]
   }

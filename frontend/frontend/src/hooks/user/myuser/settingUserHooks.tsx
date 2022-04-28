@@ -21,7 +21,7 @@ export const useSettingHook = () => {
       setmyLoading(true);
       const data = { uid: uid, displayname: name, worship: worship };
       axios
-        .post<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/user/`, data, {
+        .post<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}/aiapps/user/`, data, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -44,7 +44,7 @@ export const useSettingHook = () => {
     async (uid: string) => {
       setmyLoading(true);
       axios
-        .get<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/user/${uid}`)
+        .get<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}/aiapps/user/${uid}`)
         .then((res) => {
           const data = res.data;
           setMyWorship({ worship: data.worship });
@@ -64,7 +64,7 @@ export const useSettingHook = () => {
       setmyLoading(true);
       const data = { uid: uid, displayname: signInUser.name, worship: worship };
       axios
-        .put<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/update/`, data, {
+        .put<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}/aiapps/update/`, data, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `${myToken.token}`,
@@ -91,7 +91,7 @@ export const useSettingHook = () => {
       setmyLoading(true);
       const data = { uid: uid, displayname: name, worship: myWorship.worship };
       axios
-        .put<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/update/`, data, {
+        .put<myUserApi>(`http://${process.env.NEXT_PUBLIC_URL}/aiapps/update/`, data, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `${myToken.token}`,
@@ -116,7 +116,7 @@ export const useSettingHook = () => {
       setmyLoading(true);
       const data = { uid: uid };
       axios
-        .post<tokenCreateApi>(`http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/login/`, data, {
+        .post<tokenCreateApi>(`http://${process.env.NEXT_PUBLIC_URL}/aiapps/login/`, data, {
           headers: {
             "Content-Type": "application/json",
           },

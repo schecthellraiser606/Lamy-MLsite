@@ -73,7 +73,7 @@ resource "aws_cloudwatch_metric_alarm" "ecsfargate_cpu_low" {
   namespace           = "AWS/ECS"
   period              = "60"
   statistic           = "Average"
-  threshold           = "35"
+  threshold           = "40"
 
   dimensions = {
     ClusterName = aws_ecs_cluster.ecs_cluster.name

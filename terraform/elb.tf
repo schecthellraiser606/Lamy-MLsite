@@ -7,8 +7,8 @@ resource "aws_lb" "alb" {
     aws_security_group.web_sg.id
   ]
   subnets = [
-    aws_subnet.private_subnet_1a_app.id,
-    aws_subnet.private_subnet_1c_app.id
+    aws_subnet.public_subnet_1a_app.id,
+    aws_subnet.public_subnet_1c_app.id
   ]
 
   access_logs {
@@ -20,10 +20,11 @@ resource "aws_lb" "alb" {
 
 #target group
 resource "aws_lb_target_group" "alb_target_group_front" {
-  name     = "${var.project}-front-target"
-  port     = 3000
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
+  name        = "${var.project}-front-target"
+  port        = 3000
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.vpc.id
 
   health_check {
     interval            = 60
@@ -41,10 +42,11 @@ resource "aws_lb_target_group" "alb_target_group_front" {
 }
 
 resource "aws_lb_target_group" "alb_target_group_backend" {
-  name     = "${var.project}-backend-target"
-  port     = 8000
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
+  name        = "${var.project}-backend-target"
+  port        = 8000
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.vpc.id
 
   health_check {
     interval            = 60
@@ -90,13 +92,18 @@ resource "aws_lb_listener" "alb_listener_https" {
   }
 }
 
-resource "aws_alb_listener" "alb_listener_api" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = 8000
-  protocol          = "HTTP"
+resource "aws_lb_listener_rule" "api" {
+  listener_arn = aws_lb_listener.alb_listener_https.arn
+  priority = 100
 
-  default_action {
+  action {
+    type = "forward"
     target_group_arn = aws_lb_target_group.alb_target_group_backend.arn
-    type             = "forward"
+  }
+
+  condition {
+    path_pattern {
+      values = ["/aiapps/*"]
+    }
   }
 }

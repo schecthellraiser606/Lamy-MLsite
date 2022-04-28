@@ -15,7 +15,7 @@ export const useThreadHook = () => {
   const threadPost = useCallback(
     (uid: string, title: string, text: string) => {
       setThreadLoading(true);
-      const url = `http://${process.env.NEXT_PUBLIC_URL}:8000/aiapps/thread/`;
+      const url = `http://${process.env.NEXT_PUBLIC_URL}/aiapps/thread/`;
       const data = {
         uid: uid,
         title: title,

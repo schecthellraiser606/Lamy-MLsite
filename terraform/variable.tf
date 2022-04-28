@@ -40,7 +40,7 @@ variable "firebase_storage_bucket" {
   type = string
 }
 variable "firebase_messaging_sender_id" {
-  type = number
+  type = string
 }
 variable "firebase_app_id" {
   type = string
