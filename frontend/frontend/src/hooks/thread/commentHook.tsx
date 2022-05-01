@@ -16,7 +16,7 @@ export const useCommentHook = () => {
   const commentPost = useCallback(
     (uid: string, thread_id: number, parent_id: number | null, parent_index: number | null, text: string) => {
       setCommentLoading(true);
-      const url = `http://${process.env.NEXT_PUBLIC_URL}/aiapps/comment/`;
+      const url = `https://${process.env.NEXT_PUBLIC_URL}/aiapps/comment/`;
       const data = {
         uid: uid,
         thread_id: thread_id,
@@ -52,7 +52,7 @@ export const useCommentHook = () => {
   const commentDelete = useCallback(
     (comment_id: number) => {
       setCommentLoading(true);
-      const url = `http://${process.env.NEXT_PUBLIC_URL}/aiapps/comment/${comment_id}/`;
+      const url = `https://${process.env.NEXT_PUBLIC_URL}/aiapps/comment/${comment_id}/`;
       const data = {
         parent_id: null,
         parent_index: null,

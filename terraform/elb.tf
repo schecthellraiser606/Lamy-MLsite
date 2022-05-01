@@ -27,11 +27,11 @@ resource "aws_lb_target_group" "alb_target_group_front" {
   vpc_id      = aws_vpc.vpc.id
 
   health_check {
-    interval            = 60
+    interval            = 180
     path                = "/"
     protocol            = "HTTP"
-    timeout             = 20
-    unhealthy_threshold = 4
+    timeout             = 120
+    unhealthy_threshold = 2
     matcher             = 200
   }
 
@@ -49,11 +49,11 @@ resource "aws_lb_target_group" "alb_target_group_backend" {
   vpc_id      = aws_vpc.vpc.id
 
   health_check {
-    interval            = 60
-    path                = "/aiapps/user"
+    interval            = 180
+    path                = "/aiapps"
     protocol            = "HTTP"
-    timeout             = 20
-    unhealthy_threshold = 4
+    timeout             = 120
+    unhealthy_threshold = 2
     matcher             = 200
   }
 

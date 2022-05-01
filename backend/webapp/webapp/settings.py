@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import requests
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,28 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-91cq5gwdaf9&jzzfmmk@^gs#cmgs_xyj)yr9&i9^h4ei(&1sq!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DEBUG']
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 MYAPP_DOMAIN = os.environ['MYAPP_DOMAIN']
-
-def get_fargate_private_address():
-    try:
-        resp = requests.get('http://169.254.170.2/v2/metadata', timeout=(6.0, 7.5))
-        data = resp.json()
-        container_meta = data['Containers'][0]
-        FARGATE_PRIVARE = container_meta['Networks'][0]['IPv4Addresses'][0]
-        return FARGATE_PRIVARE
-    except requests.exceptions.RequestException:
-        print('ALLOWED HOSTSの取得に失敗')
-        raise ValueError
-    
-if not DEBUG:
-    FARGATE_PRIVARE = get_fargate_private_address()
-    ALLOWED_HOSTS.append(FARGATE_PRIVARE)
-    ALLOWED_HOSTS.append(MYAPP_DOMAIN)
-else:
-    ALLOWED_HOSTS.append("*")
 
 
 # Application definition
@@ -86,7 +70,8 @@ CORS_ORIGIN_WHITELIST =[
 ]
 
 if not DEBUG:
-    CORS_ORIGIN_WHITELIST.append("http://" + MYAPP_DOMAIN + ":3000")
+    CORS_ORIGIN_WHITELIST.append("https://www." + MYAPP_DOMAIN + ":3000")
+    CORS_ORIGIN_WHITELIST.append("https://www." + MYAPP_DOMAIN)
 
 ROOT_URLCONF = 'webapp.urls'
 
@@ -170,7 +155,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -178,20 +163,28 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Media URL
-
-if DEBUG:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'test_images')
-    MEDIA_URL = '/test_images/'
-else:
+if not DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+    
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    S3_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
-    MEDIA_URL = S3_URL
-    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_S3_REGION_NAME = os.environ['AWS_S3_REGION_NAME']
+    
+    AWS_LOCATION = 'static'
     AWS_DEFAULT_ACL = None
+    
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    DEFAULT_FILE_STORAGE = 'webapp.backends.MediaStorage'
+    
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 #default User
 AUTH_USER_MODEL = 'aiapps.User'

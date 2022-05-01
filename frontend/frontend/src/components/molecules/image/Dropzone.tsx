@@ -15,7 +15,7 @@ import { PrimaryButton } from "../../atoms/buttons/PrimaryButton";
 
 // eslint-disable-next-line react/display-name
 export const DropZone: VFC = memo(() => {
-  const url = `http://${process.env.NEXT_PUBLIC_URL}/aiapps/image/`;
+  const url = `https://${process.env.NEXT_PUBLIC_URL}/aiapps/image/`;
   const acceptFile = "image/*";
   const maxFileSize = 1048576;
   const router = useRouter();

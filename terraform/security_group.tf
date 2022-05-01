@@ -38,13 +38,13 @@ resource "aws_security_group_rule" "web_in_https" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "web_in_tcp8000" {
+resource "aws_security_group_rule" "web_in_tcp_app" {
   security_group_id = aws_security_group.web_sg.id
   type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 8000
-  to_port           = 8000
-  cidr_blocks       = ["0.0.0.0/0"]
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  source_security_group_id = aws_security_group.app_sg.id
 }
 
 resource "aws_security_group_rule" "web_out_all" {
@@ -145,11 +145,11 @@ resource "aws_security_group_rule" "db_in_tcp3306" {
   source_security_group_id = aws_security_group.app_sg.id
 }
 
-resource "aws_security_group_rule" "db_out_tcp3306" {
+resource "aws_security_group_rule" "db_out_all" {
   security_group_id        = aws_security_group.db_sg.id
   type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 3306
-  to_port                  = 3306
-  source_security_group_id = aws_security_group.app_sg.id
+  protocol                 = "-1"
+  from_port                = 0
+  to_port                  = 0
+  cidr_blocks = ["0.0.0.0/0"]
 }

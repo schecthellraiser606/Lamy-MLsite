@@ -11,6 +11,12 @@ resource "aws_db_parameter_group" "mariadb_parametergroup" {
     name  = "character_set_server"
     value = "utf8mb4"
   }
+
+  parameter {
+    apply_method = "immediate"
+    name         = "max_allowed_packet"
+    value        = "104857600"
+  }
 }
 
 # resource "aws_db_option_group" "mariadb_optiongroup" {

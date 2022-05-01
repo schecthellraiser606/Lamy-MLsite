@@ -34,8 +34,8 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
   family                   = "${var.project}-myapp-task-def"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = 1024
-  memory                   = 2048
+  cpu                      = 2048
+  memory                   = 4096
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -43,8 +43,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
     {
       "name" : "webapp",
       "image" : "${aws_ecr_repository.ecr_backend_app.repository_url}:latest",
-      "cpu" : 512,
-      "memory" : 1024,
+      "memory" : 2048,
       "essential" : true,
       "command" : ["./startup.sh"],
       "environment" : [
@@ -55,9 +54,9 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
         { "name" : "DB_PORT", "value" : "3306" },
         { "name" : "AWS_ACCESS_KEY_ID", "value" : "${var.aws_access_key_id}" },
         { "name" : "AWS_SECRET_ACCESS_KEY", "value" : "${var.aws_secret_access_key}" },
-        { "name" : "AWS_STORAGE_BUCKET_NAME", "value" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_domain_name}" },
+        { "name" : "AWS_STORAGE_BUCKET_NAME", "value" : "${aws_s3_bucket.s3_image_learn_bucket.bucket}" },
+        { "name" : "AWS_S3_REGION_NAME", "value" : "${aws_s3_bucket.s3_image_learn_bucket.region}" },
         { "name" : "MYAPP_DOMAIN", "value" : "${var.route53_domain}" },
-        { "name" : "DEBUG", "value" : "false" },
       ],
       "portMappings" : [
         {
@@ -82,8 +81,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
     {
       "name" : "frontend",
       "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest",
-      "cpu" : 512,
-      "memory" : 1024,
+      "memory" : 2048,
       "essential" : true,
       "command" : ["./startup.sh"],
       "environment" : [
@@ -94,7 +92,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
         { "name" : "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID", "value" : "${var.firebase_messaging_sender_id}" },
         { "name" : "NEXT_PUBLIC_FIREBASE_APP_ID", "value" : "${var.firebase_app_id}" },
         { "name" : "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID", "value" : "${var.firebase_measurement_id}" },
-        { "name" : "NEXT_PUBLIC_URL", "value" : "${var.route53_domain}" },
+        { "name" : "NEXT_PUBLIC_URL", "value" : "www.${var.route53_domain}" },
         { "name" : "INTERNAL_URL", "value" : "localhost" },
         { "name" : "NEXT_PUBLIC_S3_STATIC_URL", "value" : "${aws_s3_bucket.s3_image_static_bucket.bucket_regional_domain_name}" },
         { "name" : "NEXT_PUBLIC_S3_LEARN_URL", "value" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_regional_domain_name}" },
