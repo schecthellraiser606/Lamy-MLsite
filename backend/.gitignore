@@ -2,7 +2,7 @@
 /webapp/test_images
 
 #app
-/webapp/aiapps/migrations/0*.py
+/webapp/aiapps/migrations
 
 #ml_models
 /webapp/aiapps/ml_models
