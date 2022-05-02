@@ -94,7 +94,6 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
         { "name" : "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID", "value" : "${var.firebase_measurement_id}" },
         { "name" : "NEXT_PUBLIC_URL", "value" : "https://www.${var.route53_domain}" },
         { "name" : "INTERNAL_URL", "value" : "localhost" },
-        { "name" : "BASE_URL", "value" : "https://www.${var.route53_domain}" },
         { "name" : "NEXT_PUBLIC_S3_STATIC_URL", "value" : "${aws_s3_bucket.s3_image_static_bucket.bucket_regional_domain_name}" },
         { "name" : "NEXT_PUBLIC_S3_LEARN_URL", "value" : "${aws_s3_bucket.s3_image_learn_bucket.bucket_regional_domain_name}" },
       ],
