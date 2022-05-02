@@ -41,5 +41,5 @@ yarn-error.log*
 .env
 
 #image
-/src/image
-/src/pages/result
+/cypress/screenshots
+/cypress/videos
