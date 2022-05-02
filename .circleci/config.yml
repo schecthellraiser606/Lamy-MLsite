@@ -55,6 +55,7 @@ jobs:
           MYSQL_DATABASE: test
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
     working_directory: ~/cicd
+    
     steps:
       - checkout
       - restore_cache:
@@ -96,7 +97,7 @@ jobs:
   build-and-push-image-frontend:
     machine:
       image: ubuntu-2004:202010-01
-     steps:
+    steps:
       - checkout
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
