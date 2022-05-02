@@ -56,6 +56,7 @@ jobs:
           DEBUG: False
       # db container
       - image: cimg/mariadb:10.6
+        name: mariadb
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         environment:
           MYSQL_USER: testuser
@@ -103,7 +104,7 @@ jobs:
             DB_NAME: test
             DB_PORT: 3306
             DB_USER: root
-            DB_HOST: localhost
+            DB_HOST: mariadb
             DB_PASSWORD: root
             MYAPP_DOMAIN: localhost
             AWS_STORAGE_BUCKET_NAME: ""
