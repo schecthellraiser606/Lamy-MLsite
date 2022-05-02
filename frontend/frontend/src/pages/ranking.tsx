@@ -20,7 +20,7 @@ export default function RankingPage({ imageList }: Props) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const url = `http://${process.env.INTERNAL_URL}:8000/aiapps/image_rank/`;
   const res = await axios.get<LearningImagee>(url);
   const imageList = res.data;
