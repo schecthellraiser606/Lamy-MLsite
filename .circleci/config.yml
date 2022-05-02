@@ -91,7 +91,7 @@ jobs:
             DOCKERIZE_VERSION: v0.5.0
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          command: dockerize -wait tcp://mariadb:3306 -timeout 1m
 
       # setup db
       - run:
