@@ -29,7 +29,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key:  v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: build-tests
           command: npm run cyrun
@@ -45,8 +45,6 @@ jobs:
           PYTHONUTF8: 1
           PIP_DISABLE_PIP_VERSION_CHECK: "on"
           CHOKIDAR_USEPOLLING: true
-          DB_NAME: test
-          DB_HOST:
       # db container
       - image: cimg/mariadb:10.6
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -55,6 +53,7 @@ jobs:
           MYSQL_DATABASE: test
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
     working_directory: ~/cicd
+    
     steps:
       - checkout
       - restore_cache:
@@ -96,7 +95,7 @@ jobs:
   build-and-push-image-frontend:
     machine:
       image: ubuntu-2004:202010-01
-     steps:
+    steps:
       - checkout
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
