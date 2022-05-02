@@ -40,7 +40,7 @@ export const ThreadForm: VFC = memo(() => {
           </Heading>
           <Stack textAlign="center">
             <FormControl isInvalid={isTitle}>
-              <FormLabel>タイトル</FormLabel>
+              <FormLabel>タイトル(30文字まで)</FormLabel>
               <Input value={title} onChange={onChangeTitle} borderColor="white" bgColor="gray.600" />
             </FormControl>
             <FormControl>
