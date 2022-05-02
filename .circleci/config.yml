@@ -20,18 +20,17 @@ jobs:
           command: "sudo npm install -g npm@latest"
           working_directory: ~/cicd/frontend/frontend
       - restore_cache:
-          paths: ~/cicd/frontend/frontend
           keys:
-            - dependency-cache-{{ checksum "package-lock.json" }}
+            - dependency-cache-{{ checksum "~/cicd/frontend/frontend/package.json" }}
       - run:
           name: install-env
           command: |
-            apt-get update
-            apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+            sudo apt-get update
+            sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
           working_directory: ~/cicd/frontend/frontend
       - save_cache:
           paths: ~/cicd/frontend/frontend
-          key:  dependency-cache-{{ checksum "package-lock.json" }}
+          key:  dependency-cache-{{ checksum "~/cicd/frontend/frontend/package.json" }}
 
       #test
       - run:
@@ -49,6 +48,7 @@ jobs:
           PYTHONUTF8: 1
           PIP_DISABLE_PIP_VERSION_CHECK: "on"
           CHOKIDAR_USEPOLLING: true
+          DEBUG: False
       # db container
       - image: cimg/mariadb:10.6
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -61,9 +61,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          paths: ~/cicd/backend
           keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-{{ checksum "~/cicd/backend/requirements.txt" }}
             - v1-dependencies-
       - run:
           name: install dependencies
@@ -72,8 +71,7 @@ jobs:
             pip install -r ../requirements.txt
           working_directory: ~/cicd/backend/webapp
       - save_cache:
-          paths: ~/cicd/backend/
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: v1-dependencies-{{ checksum "~/cicd/backend/requirements.txt" }}
           working_directory: ~/cicd/backend
 
       # setup db
@@ -89,6 +87,7 @@ jobs:
             DB_USER: testuser
             DB_HOST: mariadb
             DB_PASSWORD: root
+            MYAPP_DOMAIN: localhost
 
       # run test
       - run:
