@@ -6,5 +6,6 @@
     "isolatedModules": false
   },
   "include": ["../node_modules/cypress", "./**/*.ts"],
-  "exclude": []
+  "exclude": [],
+  "types": ["cypress", "@testing-library/cypress"],
 }
