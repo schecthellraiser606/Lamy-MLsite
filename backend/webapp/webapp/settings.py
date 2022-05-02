@@ -186,6 +186,7 @@ if not DEBUG:
     
     DEFAULT_FILE_STORAGE = 'webapp.backends.MediaStorage'
 else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATIC_URL = 'static/'
     
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

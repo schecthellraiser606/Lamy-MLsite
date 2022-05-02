@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-if ["${MYAPP_DOMAIN}" != ""] then;
-  mkdir ./static
+mkdir ./static
+if ["${MYAPP_DOMAIN}" != ""]; then
   python manage.py collectstatic --noinput
 fi
 python manage.py migrate
