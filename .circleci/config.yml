@@ -55,7 +55,7 @@ jobs:
           CHOKIDAR_USEPOLLING: true
           DEBUG: False
       # db container
-      - image: cimg/mariadb:10.6
+      - image: cimg/mariadb:10.7
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         environment:
           MYSQL_USER: testuser
