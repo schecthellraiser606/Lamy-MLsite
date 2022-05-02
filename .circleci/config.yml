@@ -27,6 +27,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+            npm install cypress
           working_directory: ~/cicd/frontend/frontend
       - save_cache:
           paths:
@@ -52,11 +53,15 @@ jobs:
           DEBUG: False
       # db container
       - image: cimg/mariadb:10.6
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        command: |
+          mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+          GRANT ALL PRIVILEGES ON test.* TO 'testuser'@'%' identified by 'password';
+          GRANT ALL PRIVILEGES ON test_database.* TO 'testuser'@'%';
         environment:
           MYSQL_USER: testuser
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: root
+          MYSQL_PASSWORD: password
     working_directory: ~/cicd
 
     steps:
@@ -88,7 +93,7 @@ jobs:
             DB_PORT: 3306
             DB_USER: testuser
             DB_HOST: mariadb
-            DB_PASSWORD: root
+            DB_PASSWORD: password
             MYAPP_DOMAIN: localhost
 
       # run test
