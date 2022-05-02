@@ -9,8 +9,8 @@
     "lint": "next lint --dir src",
     "lint:fix": "eslint src --ext .js,jsx,.ts,.tsx --fix",
     "format": "prettier --write --ignore-path .gitignore ./**/*.{js,jsx,ts,tsx,json,css,scss}",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cyopen": "cypress open",
+    "cyrun": "cypress run"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.1.7",

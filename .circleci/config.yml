@@ -2,5 +2,154 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@7.3.0
-  aws-ecs: circleci/aws-ecs@2.2.1
   aws-cli: circleci/aws-cli@2.0.6
+
+jobs:
+  test-frontend:
+    docker:
+      - image: cimg/node:17.3.0
+        environment:
+          NODE_ENV: test
+    working_directory: ~/cicd
+
+    steps:
+      - checkout
+      # save cache and install package via npm
+      - run:
+          name: update-npm
+          command: "sudo npm install -g npm@latest"
+          working_directory: ~/cicd/frontend
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: install-packages
+          command: npm install
+          working_directory: ~/cicd/frontend
+      - save_cache:
+          paths:
+            - node_modules
+          key:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: build-tests
+          command: npm run cyrun
+          working_directory: ~/cicd/frontend
+
+  test-backend:
+    docker:
+      # backend container
+      - image: cimg/python:3.7.12
+        environment:
+          PYTHONUNBUFFERED: 1
+          PYTHONDONTWRITEBYTECODE: 1
+          PYTHONUTF8: 1
+          PIP_DISABLE_PIP_VERSION_CHECK: "on"
+          CHOKIDAR_USEPOLLING: true
+          DB_NAME: test
+          DB_HOST:
+      # db container
+      - image: cimg/mariadb:10.6
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+          MYSQL_USER: root
+          MYSQL_DATABASE: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    working_directory: ~/cicd
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            pip install --upgrade pip
+            pip install -r requirements.txt
+          working_directory: ~/cicd/backend
+      - save_cache:
+          paths:
+            - ~/cicd/backend/
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      # setup db
+      - run:
+          name: create db and table
+          command: |
+            mkdir ./static
+            python manage.py migrate
+          working_directory: ~/cicd/backend
+          environment:
+            DB_NAME: test
+            DB_PORT: 3306
+            DB_USER: root
+            DB_HOST: mariadb
+
+      # run test
+      - run:
+          name: run test
+          command: python manage.py test
+          working_directory: ~/cicd/backend
+      - store_artifacts:
+          path: /tmp/test-results
+
+  build-and-push-image-frontend:
+    machine:
+      image: ubuntu-2004:202010-01
+     steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          repo: AWS_ECR_FRONT
+          region: AWS_DEFAULT_REGION
+          tag: latest
+          path: "./frontend"
+          dockerfile: Dockerfile.ci
+
+  build-and-push-image-backend:
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          repo: AWS_ECR_BACK
+          region: AWS_DEFAULT_REGION
+          tag: latest 
+          path: "./backend"
+          # dockerfile: Dockerfile
+          dockerfile: Dockerfile.ci
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-frontend:
+          filters:
+            branches:
+              only: master
+      - test-backend:
+          filters:
+            branches:
+              only: master
+
+      # push frontend-docker-image to ECR
+      - build-and-push-image-frontend:
+          requires:
+            - test-frontend
+            - test-backend
+          filters:
+            branches:
+              only: master
+      - build-and-push-image-backend:
+          requires:
+            - test-backend
+          filters:
+            branches:
+              only: master
+            
