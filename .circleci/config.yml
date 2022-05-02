@@ -10,9 +10,6 @@ jobs:
       - image: cimg/node:17.3.0
         environment:
           NODE_ENV: test
-        command: 
-          - apt-get update
-          - apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
     working_directory: ~/cicd
 
     steps:
@@ -23,18 +20,23 @@ jobs:
           command: "sudo npm install -g npm@latest"
           working_directory: ~/cicd/frontend/frontend
       - restore_cache:
+          paths: 
+            - ~/cicd/frontend/frontend
           keys:
             - dependency-cache-{{ checksum "package-lock.json" }}
-          working_directory: ~/cicd/frontend/frontend
       - run:
-          name: install-packages
-          command: npm install
+          name: install-env
+          command: 
+            - apt-get update
+            - apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
           working_directory: ~/cicd/frontend/frontend
       - save_cache:
           paths:
-            - node_modules
+            - ~/cicd/frontend/frontend
           key:  dependency-cache-{{ checksum "package-lock.json" }}
           working_directory: ~/cicd/frontend/frontend
+
+      #test
       - run:
           name: build-tests
           command: npm run cyrun
@@ -62,10 +64,11 @@ jobs:
     steps:
       - checkout
       - restore_cache:
+          paths:
+            - ~/cicd/backend
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
             - v1-dependencies-
-          working_directory: ~/cicd/backend
       - run:
           name: install dependencies
           command: |
