@@ -10,6 +10,9 @@ jobs:
       - image: cimg/node:17.3.0
         environment:
           NODE_ENV: test
+        command: 
+          - apt-get update
+          - apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
     working_directory: ~/cicd
 
     steps:
@@ -22,6 +25,7 @@ jobs:
       - restore_cache:
           keys:
             - dependency-cache-{{ checksum "package-lock.json" }}
+          working_directory: ~/cicd/frontend/frontend
       - run:
           name: install-packages
           command: npm install
@@ -30,6 +34,7 @@ jobs:
           paths:
             - node_modules
           key:  dependency-cache-{{ checksum "package-lock.json" }}
+          working_directory: ~/cicd/frontend/frontend
       - run:
           name: build-tests
           command: npm run cyrun
@@ -49,9 +54,9 @@ jobs:
       - image: cimg/mariadb:10.6
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         environment:
-          MYSQL_USER: root
+          MYSQL_USER: testuser
           MYSQL_DATABASE: test
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: root
     working_directory: ~/cicd
 
     steps:
@@ -65,12 +70,13 @@ jobs:
           name: install dependencies
           command: |
             pip install --upgrade pip
-            pip install -r requirements.txt
+            pip install -r ../requirements.txt
           working_directory: ~/cicd/backend/webapp
       - save_cache:
           paths:
             - ~/cicd/backend/
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+          working_directory: ~/cicd/backend
 
       # setup db
       - run:
@@ -82,8 +88,9 @@ jobs:
           environment:
             DB_NAME: test
             DB_PORT: 3306
-            DB_USER: root
+            DB_USER: testuser
             DB_HOST: mariadb
+            DB_PASSWORD: root
 
       # run test
       - run:
