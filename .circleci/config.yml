@@ -35,12 +35,13 @@ jobs:
           key:  dependency-cache-{{ checksum "~/cicd/frontend/frontend/package.json" }}
 
       #test
-      - run:
-          name: build-tests
-          command: |
-            npm run dev
-            npm run cyrun
-          working_directory: ~/cicd/frontend/frontend
+      # - run:
+      #     name: build-tests
+      #     command: |
+      #       npm run dev
+      #       npm run cyrun
+      #     working_directory: ~/cicd/frontend/frontend
+
 
   test-backend:
     docker:
@@ -102,7 +103,7 @@ jobs:
             DB_NAME: test
             DB_PORT: 3306
             DB_USER: root
-            DB_HOST: mariadb
+            DB_HOST: localhost
             DB_PASSWORD: root
             MYAPP_DOMAIN: localhost
             AWS_STORAGE_BUCKET_NAME: ""
