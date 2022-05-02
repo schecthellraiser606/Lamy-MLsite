@@ -34,8 +34,8 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
   family                   = "${var.project}-myapp-task-def"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = 2048
-  memory                   = 4096
+  cpu                      = 1024
+  memory                   = 2048
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
     {
       "name" : "webapp",
       "image" : "${aws_ecr_repository.ecr_backend_app.repository_url}:latest",
-      "memory" : 2048,
+      "memory" : 1024,
       "essential" : true,
       "command" : ["./startup.sh"],
       "environment" : [
@@ -81,7 +81,7 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
     {
       "name" : "frontend",
       "image" : "${aws_ecr_repository.ecr_front_app.repository_url}:latest",
-      "memory" : 2048,
+      "memory" : 1024,
       "essential" : true,
       "command" : ["./startup.sh"],
       "environment" : [

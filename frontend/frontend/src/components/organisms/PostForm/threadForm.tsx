@@ -20,7 +20,9 @@ export const ThreadForm: VFC = memo(() => {
   const { threadLoading, threadPost } = useThreadHook();
   const { showMessage } = useMessage();
 
-  const isTitle = title.match(/[!-~]{1,30}/) ? false : true;
+  const reg = new RegExp(/^([ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠]|[0-9a-zA-Z]){31,}/);
+  const test = reg.test(title);
+  const isTitle = (title && !test) ? false : true;
 
   const onClick = () => {
     if (signInUser.id) {
@@ -40,11 +42,11 @@ export const ThreadForm: VFC = memo(() => {
           </Heading>
           <Stack textAlign="center">
             <FormControl isInvalid={isTitle}>
-              <FormLabel>タイトル(30文字まで)</FormLabel>
+              <FormLabel>タイトル (30文字まで)</FormLabel>
               <Input value={title} onChange={onChangeTitle} borderColor="white" bgColor="gray.600" />
             </FormControl>
             <FormControl>
-              <FormLabel>内容</FormLabel>
+              <FormLabel>サブタイトル (内容)</FormLabel>
               <Input value={text} onChange={onChangeText} borderColor="white" bgColor="gray.600" />
             </FormControl>
           </Stack>
