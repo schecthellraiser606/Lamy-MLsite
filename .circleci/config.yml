@@ -97,6 +97,7 @@ jobs:
           name: create db and table
           command: |
             mkdir ./static
+            python manage.py makemigrations
             python manage.py migrate
           working_directory: ~/cicd/backend/webapp
           environment:
