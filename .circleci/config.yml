@@ -29,7 +29,6 @@ jobs:
             sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
           working_directory: ~/cicd/frontend/frontend
       - save_cache:
-          paths: ~/cicd/frontend/frontend
           key:  dependency-cache-{{ checksum "~/cicd/frontend/frontend/package.json" }}
 
       #test
@@ -72,7 +71,6 @@ jobs:
           working_directory: ~/cicd/backend/webapp
       - save_cache:
           key: v1-dependencies-{{ checksum "~/cicd/backend/requirements.txt" }}
-          working_directory: ~/cicd/backend
 
       # setup db
       - run:
