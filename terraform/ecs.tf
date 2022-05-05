@@ -39,6 +39,10 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
+  depends_on = [
+    aws_db_instance.mariadb_instance,
+  ]
+
   container_definitions = jsonencode([
     {
       "name" : "webapp",
