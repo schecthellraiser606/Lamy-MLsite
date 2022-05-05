@@ -50,7 +50,7 @@ resource "aws_lb_target_group" "alb_target_group_backend" {
 
   health_check {
     interval            = 180
-    path                = "/aiapps"
+    path                = "/aiapps/"
     protocol            = "HTTP"
     timeout             = 120
     unhealthy_threshold = 2
