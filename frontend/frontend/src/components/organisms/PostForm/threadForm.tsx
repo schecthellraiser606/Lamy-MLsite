@@ -22,7 +22,7 @@ export const ThreadForm: VFC = memo(() => {
 
   const reg = new RegExp(/^([ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠]|[0-9a-zA-Z]){31,}/);
   const test = reg.test(title);
-  const isTitle = (title && !test) ? false : true;
+  const isTitle = title && !test ? false : true;
 
   const onClick = () => {
     if (signInUser.id) {

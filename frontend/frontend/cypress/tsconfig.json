@@ -7,5 +7,5 @@
   },
   "include": ["../node_modules/cypress", "./**/*.ts"],
   "exclude": [],
-  "types": ["cypress", "@testing-library/cypress"],
+  "types": ["cypress", "@testing-library/cypress"]
 }
