@@ -72,15 +72,15 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
           "CMD-SHELL",
           "curl -f http://localhost:8000/aiapps/ || exit 1"
         ],
-      },
-      "logConfiguration" : {
-        "logDriver" : "awslogs",
-        "options" : {
-          "awslogs-region" : "ap-northeast-1",
-          "awslogs-group" : "${aws_cloudwatch_log_group.fargate_cluster_log_group.name}",
-          "awslogs-stream-prefix" : "webapp-container-log-stream"
-        }
-      }
+      }#,
+      # "logConfiguration" : {
+      #   "logDriver" : "awslogs",
+      #   "options" : {
+      #     "awslogs-region" : "ap-northeast-1",
+      #     "awslogs-group" : "${aws_cloudwatch_log_group.fargate_cluster_log_group.name}",
+      #     "awslogs-stream-prefix" : "webapp-container-log-stream"
+      #   }
+      # }
     },
     {
       "name" : "frontend",
@@ -111,15 +111,15 @@ resource "aws_ecs_task_definition" "ecs_task_def" {
           "containerName" : "webapp",
           "condition" : "HEALTHY"
         }
-      ],
-      "logConfiguration" : {
-        "logDriver" : "awslogs",
-        "options" : {
-          "awslogs-region" : "ap-northeast-1",
-          "awslogs-group" : "${aws_cloudwatch_log_group.fargate_cluster_log_group.name}",
-          "awslogs-stream-prefix" : "frontend-container-log-stream"
-        }
-      }
+      ]#,
+      # "logConfiguration" : {
+      #   "logDriver" : "awslogs",
+      #   "options" : {
+      #     "awslogs-region" : "ap-northeast-1",
+      #     "awslogs-group" : "${aws_cloudwatch_log_group.fargate_cluster_log_group.name}",
+      #     "awslogs-stream-prefix" : "frontend-container-log-stream"
+      #   }
+      # }
     }
   ])
 }

@@ -1,7 +1,6 @@
 import { ChangeEvent, memo, useState, VFC } from "react";
-import { Box, Flex, Text, Divider, Select, ChakraProvider, Spacer, Stack } from "@chakra-ui/react";
+import { Box, Flex, Text, Divider, Select, ChakraProvider, Spacer, Stack, Image } from "@chakra-ui/react";
 import themeSelect from "../../../styles/themeSelect";
-import Image from "next/image";
 import { LearningImagee } from "../../../types/responseType";
 import { useImageFilter } from "../../../hooks/image/imageFilter";
 import useIsomorphicLayoutEffect from "../../../hooks/canUseDom";
@@ -98,7 +97,7 @@ export const RankSelect: VFC<Props> = memo((prop) => {
             <Flex flexDirection="row" align="center" key={index}>
               <Box p={1} marginRight={5}>
                 {/* @ts-ignore */}
-                <Image width={60} height={60} src={image.image} alt="rank" />
+                <Image width={10} height={10} src={image.image} alt="rank" />
               </Box>
               <Stack>
                 <Text>{image.user.displayname}</Text>
