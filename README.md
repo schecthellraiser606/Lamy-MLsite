@@ -1,6 +1,8 @@
 # 俺が本物のラミィだ
 サービスURL：
 https://www.lamy-ai-judgment.com/
+<br/>
+__※現在はサービスを停止しております。__
 
 ![6ezuso](https://user-images.githubusercontent.com/89838264/166904830-774b73d4-e0e0-40ea-a0e2-abece3a12e92.gif)
 
